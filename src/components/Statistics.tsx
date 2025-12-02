@@ -1,14 +1,16 @@
 import React, { useMemo } from 'react'
 import { format, startOfWeek, endOfWeek, isSameDay, subDays, startOfDay } from 'date-fns'
 import { CheckCircle2, Circle, TrendingUp, Calendar as CalendarIcon, Target } from 'lucide-react'
-import { type Todo } from '../db'
+import * as Icons from 'lucide-react'
+import { type Todo, type Category } from '../db'
 import { cn } from '../lib/utils'
 
 interface StatisticsProps {
   todos: Todo[]
+  categories: Category[]
 }
 
-export function Statistics({ todos }: StatisticsProps) {
+export function Statistics({ todos, categories }: StatisticsProps) {
   const stats = useMemo(() => {
     const total = todos.length
     const completed = todos.filter(t => t.completed).length
@@ -56,6 +58,26 @@ export function Statistics({ todos }: StatisticsProps) {
       return currentRate > bestRate ? current : best
     }, { total: 0, completed: 0, date: now })
 
+    // Category statistics
+    const categoryStats = categories.map(category => {
+      const categoryTodos = todos.filter(t => t.categoryId === category.id)
+      const categoryCompleted = categoryTodos.filter(t => t.completed).length
+      const categoryRate = categoryTodos.length > 0 ? (categoryCompleted / categoryTodos.length) * 100 : 0
+
+      return {
+        category,
+        total: categoryTodos.length,
+        completed: categoryCompleted,
+        pending: categoryTodos.length - categoryCompleted,
+        completionRate: Math.round(categoryRate)
+      }
+    }).filter(stat => stat.total > 0) // Only show categories with tasks
+
+    // Most productive category
+    const mostProductiveCategory = categoryStats.reduce((best, current) => {
+      return current.completed > best.completed ? current : best
+    }, categoryStats[0] || null)
+
     return {
       total,
       completed,
@@ -65,9 +87,11 @@ export function Statistics({ todos }: StatisticsProps) {
       thisWeekCompleted,
       last7Days,
       avgPerDay,
-      bestDay
+      bestDay,
+      categoryStats,
+      mostProductiveCategory
     }
-  }, [todos])
+  }, [todos, categories])
 
   return (
     <div className="space-y-8">
@@ -221,6 +245,94 @@ export function Statistics({ todos }: StatisticsProps) {
           </p>
         </div>
       </div>
+
+      {/* Category Statistics */}
+      {stats.categoryStats.length > 0 && (
+        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 shadow-xl">
+          <h3 className="text-2xl font-bold text-white mb-6">Tasks by Category</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {stats.categoryStats.map(({ category, total, completed, pending, completionRate }) => {
+              const IconComponent = Icons[category.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>
+
+              return (
+                <div
+                  key={category.id}
+                  className="bg-black/20 rounded-2xl p-5 border border-white/5 hover:border-white/10 transition-all"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div
+                      className="p-3 rounded-xl flex-shrink-0"
+                      style={{ backgroundColor: category.color }}
+                    >
+                      {IconComponent && <IconComponent className="w-5 h-5 text-white" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-white font-semibold truncate">{category.name}</h4>
+                      <p className="text-white/60 text-sm">{total} tasks</p>
+                    </div>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-white/80">Progress</span>
+                      <span className="text-white font-semibold">{completionRate}%</span>
+                    </div>
+                    <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
+                        style={{
+                          width: `${completionRate}%`,
+                          backgroundColor: category.color
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 gap-3 mt-4">
+                    <div className="bg-green-500/10 rounded-lg p-2 text-center">
+                      <div className="text-green-400 font-bold text-lg">{completed}</div>
+                      <div className="text-white/60 text-xs">Completed</div>
+                    </div>
+                    <div className="bg-orange-500/10 rounded-lg p-2 text-center">
+                      <div className="text-orange-400 font-bold text-lg">{pending}</div>
+                      <div className="text-white/60 text-xs">Pending</div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Most Productive Category */}
+          {stats.mostProductiveCategory && (
+            <div className="mt-6 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-2xl p-6 border border-indigo-500/30">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-white/80 text-sm font-medium">Most Productive Category</h4>
+                  <div className="flex items-center gap-2 mt-1">
+                    {(() => {
+                      const IconComponent = Icons[stats.mostProductiveCategory.category.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>
+                      return IconComponent && <IconComponent className="w-4 h-4 text-white" />
+                    })()}
+                    <span className="text-white font-bold text-lg">
+                      {stats.mostProductiveCategory.category.name}
+                    </span>
+                    <span className="text-white/60 text-sm">
+                      ({stats.mostProductiveCategory.completed} completed)
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

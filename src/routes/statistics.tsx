@@ -9,6 +9,7 @@ export const Route = createFileRoute('/statistics')({
 
 function StatisticsPage() {
   const todos = useLiveQuery(() => db.todos.toArray()) ?? []
+  const categories = useLiveQuery(() => db.categories.toArray()) ?? []
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-12 px-4">
@@ -39,7 +40,7 @@ function StatisticsPage() {
           <p className="text-white/60 text-lg">Track your productivity and progress</p>
         </header>
 
-        <Statistics todos={todos} />
+        <Statistics todos={todos} categories={categories} />
       </div>
     </div>
   )
