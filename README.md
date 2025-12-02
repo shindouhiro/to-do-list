@@ -17,6 +17,50 @@ To build this application for production:
 pnpm build
 ```
 
+## Docker Deployment
+
+### Quick Start with Docker
+
+```bash
+# Pull and run from Docker Hub
+docker pull shindouhiro/calendar-todo:latest
+docker run -d -p 3000:80 --name calendar-todo shindouhiro/calendar-todo:latest
+```
+
+Visit http://localhost:3000 to see the app.
+
+### Using Docker Compose
+
+```bash
+# Start the application
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the application
+docker-compose down
+```
+
+### Build Locally
+
+```bash
+# Build the Docker image
+docker build -t calendar-todo .
+
+# Run the container
+docker run -d -p 3000:80 calendar-todo
+```
+
+### Multi-Architecture Support
+
+The Docker image supports multiple architectures:
+- `linux/amd64` - Intel/AMD 64-bit
+- `linux/arm64` - ARM 64-bit (Apple Silicon, AWS Graviton)
+- `linux/arm/v7` - ARM 32-bit (Raspberry Pi)
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 ## Testing
 
 This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
