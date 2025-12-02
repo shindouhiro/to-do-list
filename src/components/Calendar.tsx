@@ -180,7 +180,7 @@ export function Calendar({ todos, onAddTodo, onToggleTodo, onDeleteTodo }: Calen
                 </div>
               </form>
 
-              <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar max-h-[500px]">
                 {selectedDateTodos.length === 0 ? (
                   <div className="text-center text-white/40 py-8">
                     No tasks for this day
