@@ -1,0 +1,13 @@
+node_modules
+dist
+.git
+.gitignore
+.vscode
+.tanstack
+*.md
+.prettierignore
+prettier.config.js
+eslint.config.js
+.github
+*.log
+.DS_Store
