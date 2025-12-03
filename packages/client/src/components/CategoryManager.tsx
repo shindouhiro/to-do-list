@@ -109,7 +109,7 @@ export function CategoryManager({ categories, onAddCategory, onUpdateCategory, o
           {/* Icon Selector */}
           <div>
             <label className="block text-white/80 text-sm font-medium mb-2">Icon</label>
-            <div className="grid grid-cols-6 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
               {AVAILABLE_ICONS.map((iconName) => {
                 const IconComponent = Icons[iconName as keyof typeof Icons] as React.ComponentType<{ className?: string }>
                 const isSelected = formData.icon === iconName
@@ -135,7 +135,7 @@ export function CategoryManager({ categories, onAddCategory, onUpdateCategory, o
           {/* Color Picker */}
           <div>
             <label className="block text-white/80 text-sm font-medium mb-2">Color</label>
-            <div className="grid grid-cols-6 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
               {COLOR_PALETTE.map((color) => {
                 const isSelected = formData.color === color
                 return (

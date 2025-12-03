@@ -16,6 +16,7 @@ import { ChevronLeft, ChevronRight, Plus, Check, Trash2 } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { type Todo, type Category } from '../db'
 import { CategorySelector, CategoryBadge, CategoryPicker } from './CategoryComponents'
+import { Modal } from './Modal'
 
 export type { Todo }
 
@@ -34,6 +35,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
   const [newTodoText, setNewTodoText] = useState('')
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string | undefined>(undefined)
   const [selectedCategoryForNewTodo, setSelectedCategoryForNewTodo] = useState<string | undefined>(undefined)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(monthStart)
@@ -62,6 +64,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
       onAddTodo(selectedDate, newTodoText, selectedCategoryForNewTodo)
       setNewTodoText('')
       setSelectedCategoryForNewTodo(undefined)
+      setIsModalOpen(false)
     }
   }
 
@@ -90,7 +93,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
 
       <div className="flex flex-col lg:flex-row gap-8 w-full max-w-6xl mx-auto">
         {/* Calendar Section */}
-        <div className="flex-1 bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-6 shadow-xl">
+        <div className="flex-1 bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-3 md:p-6 shadow-xl">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold text-white tracking-tight">
               {format(currentMonth, 'MMMM yyyy')}
@@ -111,7 +114,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
             </div>
           </div>
 
-          <div className="grid grid-cols-7 gap-4 mb-4">
+          <div className="grid grid-cols-7 gap-1 md:gap-4 mb-4">
             {weekDays.map((day) => (
               <div
                 key={day}
@@ -122,7 +125,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
             ))}
           </div>
 
-          <div className="grid grid-cols-7 gap-4">
+          <div className="grid grid-cols-7 gap-1 md:gap-4">
             {calendarDays.map((day) => {
               const dayTodos = todos.filter((todo) => isSameDay(todo.date, day))
               const isSelected = selectedDate && isSameDay(day, selectedDate)
@@ -132,7 +135,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
                   key={day.toString()}
                   onClick={() => handleDateClick(day)}
                   className={cn(
-                    'aspect-square relative flex flex-col items-center justify-center rounded-2xl cursor-pointer transition-all duration-300 group',
+                    'aspect-square relative flex flex-col items-center justify-center rounded-full cursor-pointer transition-all duration-300 group',
                     !isSameMonth(day, monthStart) && 'opacity-30',
                     isSelected
                       ? 'bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg scale-105 z-10'
@@ -142,7 +145,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
                 >
                   <span
                     className={cn(
-                      'text-lg font-semibold',
+                      'text-sm md:text-lg font-semibold',
                       isSelected ? 'text-white' : 'text-white/90'
                     )}
                   >
@@ -150,19 +153,19 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
                   </span>
 
                   {/* Todo Indicators */}
-                  <div className="flex gap-1 mt-2">
+                  <div className="flex gap-0.5 md:gap-1 mt-1 md:mt-2">
                     {dayTodos.slice(0, 3).map((_, i) => (
                       <div
                         key={i}
                         className={cn(
-                          'w-1.5 h-1.5 rounded-full',
+                          'w-1 h-1 md:w-1.5 md:h-1.5 rounded-full',
                           isSelected ? 'bg-white/80' : 'bg-indigo-400'
                         )}
                       />
                     ))}
                     {dayTodos.length > 3 && (
                       <div className={cn(
-                        'w-1.5 h-1.5 rounded-full',
+                        'w-1 h-1 md:w-1.5 md:h-1.5 rounded-full',
                         isSelected ? 'bg-white/80' : 'bg-indigo-400'
                       )}
                       />
@@ -177,7 +180,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
         {/* Todo List Section */}
         <div className={cn(
           "w-full lg:w-96 bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-6 shadow-xl transition-all duration-500",
-          selectedDate ? "opacity-100 translate-x-0" : "opacity-50 translate-x-10 pointer-events-none lg:pointer-events-auto lg:opacity-100 lg:translate-x-0"
+          selectedDate ? "opacity-100 translate-x-0" : "opacity-50 translate-x-0 pointer-events-none lg:pointer-events-auto lg:opacity-100 lg:translate-x-0"
         )}>
           <div className="h-full flex flex-col">
             <h3 className="text-2xl font-bold text-white mb-6">
@@ -186,7 +189,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
 
             {selectedDate ? (
               <>
-                <form onSubmit={handleAddTodo} className="mb-6 space-y-4">
+                <form onSubmit={handleAddTodo} className="mb-6 space-y-4 hidden lg:block">
                   <div className="relative">
                     <input
                       type="text"
@@ -270,6 +273,56 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
           </div>
         </div>
       </div>
+
+      {/* Mobile Floating Action Button */}
+      {selectedDate && (
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="fixed bottom-6 right-6 lg:hidden z-40 p-4 bg-indigo-500 hover:bg-indigo-600 text-white rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 flex items-center justify-center"
+          aria-label="Add Task"
+        >
+          <Plus className="w-6 h-6" />
+        </button>
+      )}
+
+      {/* Mobile Add Task Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={selectedDate ? `Add Task - ${format(selectedDate, 'MMM d')}` : 'Add Task'}
+      >
+        <form onSubmit={handleAddTodo} className="space-y-4">
+          <div className="relative">
+            <input
+              type="text"
+              value={newTodoText}
+              onChange={(e) => setNewTodoText(e.target.value)}
+              placeholder="What needs to be done?"
+              className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              autoFocus
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-white/60 mb-2">Category</label>
+            <CategoryPicker
+              categories={categories}
+              selectedCategoryId={selectedCategoryForNewTodo}
+              onSelectCategory={setSelectedCategoryForNewTodo}
+            />
+          </div>
+
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={!newTodoText.trim()}
+              className="w-full py-3 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-white font-medium transition-all shadow-lg"
+            >
+              Add Task
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   )
 }
