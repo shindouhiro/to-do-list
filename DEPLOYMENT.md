@@ -13,7 +13,7 @@ Calendar Todo 应用已配置为使用 Docker 进行部署，支持多架构（a
 docker pull shindouhiro/calendar-todo:latest
 
 # 运行容器
-docker run -d -p 3000:80 --name calendar-todo shindouhiro/calendar-todo:latest
+docker run -d -p 3000:3001 --name calendar-todo shindouhiro/calendar-todo:latest
 ```
 
 访问 http://localhost:3000 查看应用。
@@ -48,7 +48,7 @@ docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t shindouhi
 
 ```bash
 # 运行容器
-docker run -d -p 3000:80 --name calendar-todo-test calendar-todo
+docker run -d -p 3000:3001 --name calendar-todo-test calendar-todo
 
 # 健康检查
 docker exec calendar-todo-test wget --spider http://localhost/health
@@ -113,12 +113,14 @@ spec:
     metadata:
       labels:
         app: calendar-todo
+      annotations:
+        traefik.http.services.calendar.loadbalancer.server.port: "3001"
     spec:
       containers:
       - name: calendar-todo
         image: shindouhiro/calendar-todo:latest
         ports:
-        - containerPort: 80
+        - containerPort: 3001
         resources:
           requests:
             memory: "256Mi"
@@ -129,13 +131,13 @@ spec:
         livenessProbe:
           httpGet:
             path: /health
-            port: 80
+            port: 3001
           initialDelaySeconds: 5
           periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /health
-            port: 80
+            port: 3001
           initialDelaySeconds: 3
           periodSeconds: 10
 ---
@@ -147,8 +149,8 @@ spec:
   selector:
     app: calendar-todo
   ports:
-  - port: 80
-    targetPort: 80
+  - port: 3001
+    targetPort: 3001
   type: LoadBalancer
 ```
 
@@ -175,7 +177,7 @@ services:
           cpus: '0.5'
           memory: 256M
     ports:
-      - "3000:80"
+      - "${PORT:-3000}:3001"
     healthcheck:
       test: ["CMD", "wget", "--spider", "http://localhost/health"]
       interval: 30s
@@ -252,7 +254,7 @@ docker stop calendar-todo
 docker rm calendar-todo
 
 # 启动新容器
-docker run -d -p 3000:80 --name calendar-todo shindouhiro/calendar-todo:latest
+docker run -d -p 3000:3001 --name calendar-todo shindouhiro/calendar-todo:latest
 ```
 
 或使用 Docker Compose：

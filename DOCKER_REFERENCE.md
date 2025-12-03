@@ -9,10 +9,10 @@
 docker pull shindouhiro/calendar-todo:latest
 
 # 运行容器（端口 3000）
-docker run -d -p 3000:80 --name calendar-todo shindouhiro/calendar-todo:latest
+docker run -d -p 3000:3001 --name calendar-todo shindouhiro/calendar-todo:latest
 
 # 运行容器（自定义端口）
-docker run -d -p 8080:80 --name calendar-todo shindouhiro/calendar-todo:latest
+docker run -d -p 8080:3001 --name calendar-todo shindouhiro/calendar-todo:latest
 ```
 
 ### 容器管理
@@ -131,7 +131,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - "3000:3001"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
@@ -176,17 +176,17 @@ build:
 
 ```yaml
 ports:
-  - "3000:80"  # 主机端口:容器端口
+  - "3000:3001"  # 主机端口:容器端口
 ```
 
 - **3000**: 主机（你的电脑）上的端口
-- **80**: 容器内 Nginx 监听的端口
+- **3001**: 容器内 Node.js 监听的端口
 - **访问**: http://localhost:3000
 
 **多端口映射示例**:
 ```yaml
 ports:
-  - "3000:80"   # HTTP
+  - "3000:3001"   # HTTP
   - "3443:443"  # HTTPS（如果配置了）
 ```
 
@@ -280,7 +280,7 @@ services:
     
     # 端口映射
     ports:
-      - "3000:80"
+      - "3000:3001"
     
     # 网络配置
     networks:
@@ -375,7 +375,7 @@ services:
   calendar-todo:
     image: shindouhiro/calendar-todo:latest
     ports:
-      - "3000:80"
+      - "3000:3001"
     depends_on:
       - redis
     networks:
@@ -429,7 +429,7 @@ services:
       dockerfile: Dockerfile
       target: development  # 多阶段构建的开发阶段
     ports:
-      - "3000:80"
+      - "3000:3001"
       - "5173:5173"  # Vite 开发服务器
     volumes:
       - ./src:/app/src:cached  # 源码热重载
@@ -450,7 +450,7 @@ services:
   calendar-todo:
     image: shindouhiro/calendar-todo:latest
     ports:
-      - "3000:80"
+      - "3000:3001"
 ```
 
 #### 2. 生产环境推荐配置
@@ -462,7 +462,7 @@ services:
     image: shindouhiro/calendar-todo:latest
     container_name: calendar-todo
     ports:
-      - "3000:80"
+      - "3000:3001"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--spider", "http://localhost/health"]
@@ -530,7 +530,7 @@ services:
   calendar-todo:
     image: shindouhiro/calendar-todo:latest
     ports:
-      - "3000:80"
+      - "3000:3001"
 ```
 
 生产环境覆盖 `docker-compose.prod.yml`:
@@ -639,7 +639,7 @@ docker pull shindouhiro/calendar-todo:latest
 docker stop calendar-todo && docker rm calendar-todo
 
 # 3. 启动新容器
-docker run -d -p 3000:80 --name calendar-todo shindouhiro/calendar-todo:latest
+docker run -d -p 3000:3001 --name calendar-todo shindouhiro/calendar-todo:latest
 ```
 
 ### 方法 2: 使用 Docker Compose
@@ -658,7 +658,7 @@ docker-compose pull && docker-compose up -d
 docker pull shindouhiro/calendar-todo:latest
 docker stop calendar-todo
 docker rm calendar-todo
-docker run -d -p 3000:80 --name calendar-todo shindouhiro/calendar-todo:latest
+docker run -d -p 3000:3001 --name calendar-todo shindouhiro/calendar-todo:latest
 echo "Updated to latest version"
 ```
 
@@ -681,7 +681,7 @@ lsof -i :3000  # macOS/Linux
 netstat -ano | findstr :3000  # Windows
 
 # 使用不同端口
-docker run -d -p 8080:80 --name calendar-todo shindouhiro/calendar-todo:latest
+docker run -d -p 8080:3001 --name calendar-todo shindouhiro/calendar-todo:latest
 ```
 
 ### 无法访问应用
@@ -726,7 +726,7 @@ sudo systemctl restart docker
 docker run -d \
   --memory="512m" \
   --cpus="1.0" \
-  -p 3000:80 \
+  -p 3000:3001 \
   --name calendar-todo \
   shindouhiro/calendar-todo:latest
 ```
@@ -781,7 +781,7 @@ docker network create calendar-network
 docker run -d \
   --network calendar-network \
   --name calendar-todo \
-  -p 3000:80 \
+  -p 3000:3001 \
   shindouhiro/calendar-todo:latest
 
 # 查看网络
@@ -799,7 +799,7 @@ docker network inspect calendar-network
 # 设置环境变量
 docker run -d \
   -e NODE_ENV=production \
-  -p 3000:80 \
+  -p 3000:3001 \
   --name calendar-todo \
   shindouhiro/calendar-todo:latest
 ```
@@ -812,7 +812,7 @@ docker run -d \
 # 挂载自定义 nginx 配置
 docker run -d \
   -v $(pwd)/custom-nginx.conf:/etc/nginx/conf.d/default.conf \
-  -p 3000:80 \
+  -p 3000:3001 \
   --name calendar-todo \
   shindouhiro/calendar-todo:latest
 ```
@@ -827,7 +827,7 @@ alias ctd-start='docker start calendar-todo'
 alias ctd-stop='docker stop calendar-todo'
 alias ctd-restart='docker restart calendar-todo'
 alias ctd-logs='docker logs -f calendar-todo'
-alias ctd-update='docker pull shindouhiro/calendar-todo:latest && docker stop calendar-todo && docker rm calendar-todo && docker run -d -p 3000:80 --name calendar-todo shindouhiro/calendar-todo:latest'
+alias ctd-update='docker pull shindouhiro/calendar-todo:latest && docker stop calendar-todo && docker rm calendar-todo && docker run -d -p 3000:3001 --name calendar-todo shindouhiro/calendar-todo:latest'
 ```
 
 使用：

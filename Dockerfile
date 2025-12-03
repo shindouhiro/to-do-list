@@ -29,8 +29,8 @@ COPY dist ./dist
 RUN mkdir -p /app/data
 ENV DB_PATH=/app/data/todo.db
 
-# Expose port 3000
-EXPOSE 3000
+# Expose port 3001
+EXPOSE 3001
 
 # Start server
 CMD ["pnpm", "start:server"]
