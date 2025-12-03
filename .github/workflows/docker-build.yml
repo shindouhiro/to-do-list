@@ -28,29 +28,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build application
-        run: pnpm run build
-
-      - name: Verify build output
-        run: |
-          echo "Checking build artifacts..."
-          ls -la dist/
-          echo "Build verification complete"
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
