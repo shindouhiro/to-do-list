@@ -17,7 +17,7 @@ COPY packages/server/package.json ./packages/server/
 COPY packages/client/package.json ./packages/client/
 
 # Install all dependencies
-RUN pnpm install 
+RUN pnpm install && pnpm rebuild better-sqlite3 -r 
 
 # Copy server code
 COPY packages/server ./packages/server
