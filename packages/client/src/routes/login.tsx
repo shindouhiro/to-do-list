@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { authApi, type LoginRequest } from '../lib/auth'
 import { LogIn } from 'lucide-react'
@@ -96,12 +96,12 @@ function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-white/60 text-sm">
               Don't have an account?{' '}
-              <a
-                href="/register"
+              <Link
+                to="/register"
                 className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
               >
                 Sign up
-              </a>
+              </Link>
             </p>
           </div>
         </div>

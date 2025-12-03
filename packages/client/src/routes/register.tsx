@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { authApi, type RegisterRequest } from '../lib/auth'
 import { UserPlus } from 'lucide-react'
@@ -121,12 +121,12 @@ function RegisterPage() {
           <div className="mt-6 text-center">
             <p className="text-white/60 text-sm">
               Already have an account?{' '}
-              <a
-                href="/login"
+              <Link
+                to="/login"
                 className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
               >
                 Sign in
-              </a>
+              </Link>
             </p>
           </div>
         </div>
