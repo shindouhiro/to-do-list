@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { api, type Category } from '../api'
 import { CategoryManager } from '../components/CategoryManager'
 import { ArrowLeft } from 'lucide-react'
+import { generateUUID } from '../lib/uuid'
 
 export const Route = createFileRoute('/categories')({
   component: CategoriesPage,
@@ -26,7 +27,7 @@ function CategoriesPage() {
 
   const handleAddCategory = async (category: Omit<Category, 'id'>) => {
     await api.categories.add({
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       ...category,
     })
     await fetchCategories()

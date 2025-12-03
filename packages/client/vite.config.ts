@@ -25,6 +25,16 @@ export default defineConfig({
   build: {
     outDir: './dist',
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'router-vendor': ['@tanstack/react-router'],
+        },
+      },
+    },
+    target: 'es2015',
+    minify: 'terser',
   },
   server: {
     proxy: {

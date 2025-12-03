@@ -135,7 +135,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
                   key={day.toString()}
                   onClick={() => handleDateClick(day)}
                   className={cn(
-                    'aspect-square relative flex flex-col items-center justify-center rounded-full cursor-pointer transition-all duration-300 group',
+                    'aspect-square relative flex flex-col items-center justify-center rounded-full md:rounded-2xl cursor-pointer transition-all duration-300 group',
                     !isSameMonth(day, monthStart) && 'opacity-30',
                     isSelected
                       ? 'bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg scale-105 z-10'

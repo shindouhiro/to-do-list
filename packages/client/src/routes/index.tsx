@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { api, type Todo, type Category } from '../api'
 import { Calendar } from '../components/Calendar'
 import { DataToolbar } from '../components/DataToolbar'
+import { generateUUID } from '../lib/uuid'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -31,7 +32,7 @@ function App() {
 
   const handleAddTodo = async (date: Date, text: string, categoryId?: string) => {
     await api.todos.add({
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       text,
       completed: false,
       date,
