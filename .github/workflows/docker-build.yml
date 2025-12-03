@@ -44,6 +44,13 @@ jobs:
 
       - name: Build application
         run: pnpm run build
+
+      - name: Verify build output
+        run: |
+          echo "Checking build artifacts..."
+          ls -la dist/
+          echo "Build verification complete"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 

@@ -1,9 +1,11 @@
 node_modules
+packages/*/node_modules
 
 .git
 .gitignore
 .vscode
 .tanstack
+packages/*/.tanstack
 *.md
 .prettierignore
 prettier.config.js

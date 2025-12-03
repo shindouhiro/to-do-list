@@ -9,14 +9,18 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy workspace configuration
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 
-# Install production dependencies
-RUN pnpm install --prod --frozen-lockfile
+# Copy package files
+COPY packages/server/package.json ./packages/server/
+COPY packages/client/package.json ./packages/client/
+
+# Install all dependencies
+RUN pnpm install --frozen-lockfile
 
 # Copy server code
-COPY server ./server
+COPY packages/server ./packages/server
 
 # Copy built frontend files
 COPY dist ./dist
@@ -29,4 +33,4 @@ ENV DB_PATH=/app/data/todo.db
 EXPOSE 3000
 
 # Start server
-CMD ["npx", "tsx", "server/index.ts"]
+CMD ["pnpm", "start:server"]
