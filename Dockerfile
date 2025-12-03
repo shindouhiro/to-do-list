@@ -1,8 +1,8 @@
 # Production image with Node.js
-FROM node:20-alpine
+FROM node:20-slim
 
 # Install build dependencies for better-sqlite3
-RUN apk add --no-cache python3 make g++
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 # Enable pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -11,6 +11,8 @@ WORKDIR /app
 
 # Copy workspace configuration
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+# Configure pnpm to use hoisted linker to avoid native module issues
+RUN echo "node-linker=hoisted" > .npmrc
 
 # Copy package files
 COPY packages/server/package.json ./packages/server/
