@@ -82,7 +82,10 @@ router.post('/register', async (req: Request, res: Response) => {
       token,
     });
   } catch (error) {
-    logger.error('Registration error', error);
+    logger.error('Registration error', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    });
     res.status(500).json({ error: 'Failed to register user' });
   }
 });
@@ -131,7 +134,10 @@ router.post('/login', async (req: Request, res: Response) => {
       token,
     });
   } catch (error) {
-    logger.error('Login error', error);
+    logger.error('Login error', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    });
     res.status(500).json({ error: 'Failed to login' });
   }
 });
@@ -150,7 +156,10 @@ router.get('/me', authMiddleware, (req: AuthRequest, res: Response) => {
 
     res.json(user);
   } catch (error) {
-    logger.error('Get user error', error);
+    logger.error('Get user error', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    });
     res.status(500).json({ error: 'Failed to get user' });
   }
 });
