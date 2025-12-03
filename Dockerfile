@@ -1,18 +1,32 @@
-# Production image with Nginx
-FROM nginx:alpine
+# Production image with Node.js
+FROM node:20-alpine
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Install build dependencies for better-sqlite3
+RUN apk add --no-cache python3 make g++
 
-# Copy built files from local dist directory
-COPY dist /usr/share/nginx/html
+# Enable pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Add healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+WORKDIR /app
 
-# Expose port 80
-EXPOSE 80
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Install production dependencies
+RUN pnpm install --prod --frozen-lockfile
+
+# Copy server code
+COPY server ./server
+
+# Copy built frontend files
+COPY dist ./dist
+
+# Create directory for database
+RUN mkdir -p /app/data
+ENV DB_PATH=/app/data/todo.db
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start server
+CMD ["npx", "tsx", "server/index.ts"]

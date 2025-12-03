@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import * as Icons from 'lucide-react'
-import { type Category } from '../db'
+import { type Category } from '../api'
 import { cn } from '../lib/utils'
 import { Plus, Edit2, Trash2, Check } from 'lucide-react'
 

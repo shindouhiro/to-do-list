@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useLiveQuery } from 'dexie-react-hooks'
-import { db } from '../db'
+import { useEffect, useState, useCallback } from 'react'
+import { api, type Todo, type Category } from '../api'
 import { Calendar } from '../components/Calendar'
 import { DataToolbar } from '../components/DataToolbar'
 
@@ -9,28 +9,48 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-  const todos = useLiveQuery(() => db.todos.toArray()) ?? []
-  const categories = useLiveQuery(() => db.categories.toArray()) ?? []
+  const [todos, setTodos] = useState<Todo[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [todosData, categoriesData] = await Promise.all([
+        api.todos.getAll(),
+        api.categories.getAll()
+      ])
+      setTodos(todosData)
+      setCategories(categoriesData)
+    } catch (error) {
+      console.error('Failed to fetch data:', error)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   const handleAddTodo = async (date: Date, text: string, categoryId?: string) => {
-    await db.todos.add({
+    await api.todos.add({
       id: crypto.randomUUID(),
       text,
       completed: false,
       date,
       categoryId,
     })
+    await fetchData()
   }
 
   const handleToggleTodo = async (id: string) => {
-    const todo = await db.todos.get(id)
+    const todo = todos.find(t => t.id === id)
     if (todo) {
-      await db.todos.update(id, { completed: !todo.completed })
+      await api.todos.update(id, { completed: !todo.completed })
+      await fetchData()
     }
   }
 
   const handleDeleteTodo = async (id: string) => {
-    await db.todos.delete(id)
+    await api.todos.delete(id)
+    await fetchData()
   }
 
   return (
@@ -85,7 +105,7 @@ function App() {
 
         {/* Data Management Toolbar */}
         <div className="mb-8 max-w-6xl mx-auto">
-          <DataToolbar todos={todos} />
+          <DataToolbar todos={todos} onRefresh={fetchData} />
         </div>
 
         <Calendar

@@ -1,13 +1,14 @@
 import React, { useRef } from 'react'
 import { Download, Upload, Trash2, Info } from 'lucide-react'
-import { db, type Todo } from '../db'
+import { api, type Todo } from '../api'
 import { cn } from '../lib/utils'
 
 interface DataToolbarProps {
   todos: Todo[]
+  onRefresh?: () => void
 }
 
-export function DataToolbar({ todos }: DataToolbarProps) {
+export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // 导出数据为 JSON
@@ -48,8 +49,10 @@ export function DataToolbar({ todos }: DataToolbarProps) {
         }))
 
         // 清空现有数据并导入新数据
-        await db.todos.clear()
-        await db.todos.bulkAdd(validTodos)
+        await api.todos.clear()
+        await api.todos.bulkAdd(validTodos)
+
+        onRefresh?.()
 
         alert(`Successfully imported ${validTodos.length} todos!`)
       } catch (error) {
@@ -77,7 +80,8 @@ export function DataToolbar({ todos }: DataToolbarProps) {
     )
 
     if (confirmed) {
-      await db.todos.clear()
+      await api.todos.clear()
+      onRefresh?.()
       alert('All data cleared successfully')
     }
   }

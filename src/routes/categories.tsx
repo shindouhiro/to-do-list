@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useLiveQuery } from 'dexie-react-hooks'
-import { db } from '../db'
+import { useEffect, useState, useCallback } from 'react'
+import { api, type Category } from '../api'
 import { CategoryManager } from '../components/CategoryManager'
 import { ArrowLeft } from 'lucide-react'
 
@@ -9,21 +9,37 @@ export const Route = createFileRoute('/categories')({
 })
 
 function CategoriesPage() {
-  const categories = useLiveQuery(() => db.categories.toArray()) ?? []
+  const [categories, setCategories] = useState<Category[]>([])
 
-  const handleAddCategory = async (category: Omit<typeof categories[0], 'id'>) => {
-    await db.categories.add({
+  const fetchCategories = useCallback(async () => {
+    try {
+      const data = await api.categories.getAll()
+      setCategories(data)
+    } catch (error) {
+      console.error('Failed to fetch categories:', error)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchCategories()
+  }, [fetchCategories])
+
+  const handleAddCategory = async (category: Omit<Category, 'id'>) => {
+    await api.categories.add({
       id: crypto.randomUUID(),
       ...category,
     })
+    await fetchCategories()
   }
 
-  const handleUpdateCategory = async (id: string, updates: Partial<typeof categories[0]>) => {
-    await db.categories.update(id, updates)
+  const handleUpdateCategory = async (id: string, updates: Partial<Category>) => {
+    await api.categories.update(id, updates)
+    await fetchCategories()
   }
 
   const handleDeleteCategory = async (id: string) => {
-    await db.categories.delete(id)
+    await api.categories.delete(id)
+    await fetchCategories()
   }
 
   return (

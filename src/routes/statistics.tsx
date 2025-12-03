@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useLiveQuery } from 'dexie-react-hooks'
-import { db } from '../db'
+import { useEffect, useState } from 'react'
+import { api, type Todo, type Category } from '../api'
 import { Statistics } from '../components/Statistics'
 
 export const Route = createFileRoute('/statistics')({
@@ -8,8 +8,24 @@ export const Route = createFileRoute('/statistics')({
 })
 
 function StatisticsPage() {
-  const todos = useLiveQuery(() => db.todos.toArray()) ?? []
-  const categories = useLiveQuery(() => db.categories.toArray()) ?? []
+  const [todos, setTodos] = useState<Todo[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [todosData, categoriesData] = await Promise.all([
+          api.todos.getAll(),
+          api.categories.getAll()
+        ])
+        setTodos(todosData)
+        setCategories(categoriesData)
+      } catch (error) {
+        console.error('Failed to fetch data:', error)
+      }
+    }
+    fetchData()
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-12 px-4">
