@@ -17,7 +17,7 @@ COPY packages/server/package.json ./packages/server/
 COPY packages/client/package.json ./packages/client/
 
 # Install all dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --force
 
 # Copy server code
 COPY packages/server ./packages/server
