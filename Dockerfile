@@ -22,6 +22,9 @@ RUN pnpm install
 # Copy server code
 COPY packages/server ./packages/server
 
+# Build server
+RUN pnpm --filter @todo-app/server build
+
 # Copy built frontend files
 COPY dist ./dist
 
@@ -33,4 +36,4 @@ ENV DB_PATH=/app/data/todo.db
 EXPOSE 3001
 
 # Start server
-CMD ["pnpm", "start:server"]
+CMD ["node", "packages/server/dist/index.js"]
