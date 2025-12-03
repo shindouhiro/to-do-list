@@ -9,29 +9,20 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy workspace configuration
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+# Copy all source code
+COPY . .
+
 # Configure pnpm to use hoisted linker to avoid native module issues
 RUN echo "node-linker=hoisted" > .npmrc
 
-# Copy package files
-COPY packages/server/package.json ./packages/server/
-COPY packages/client/package.json ./packages/client/
+# Install all dependencies in the container
+RUN pnpm install --frozen-lockfile
 
-# Install all dependencies
-RUN pnpm install
-
-# Copy server code
-COPY packages/server ./packages/server
-
-# Build server
+# Build server in the container
 RUN pnpm --filter @todo-app/server build
 
-# Rebuild better-sqlite3 explicitly to ensure native bindings are correct
-RUN npm_config_build_from_source=true pnpm rebuild better-sqlite3
-
-# Copy built frontend files
-COPY dist ./dist
+# Build client in the container (if not already built)
+RUN pnpm --filter @todo-app/client build
 
 # Create directory for database
 RUN mkdir -p /app/data
