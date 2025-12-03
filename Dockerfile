@@ -17,13 +17,16 @@ COPY packages/server/package.json ./packages/server/
 COPY packages/client/package.json ./packages/client/
 
 # Install all dependencies
-RUN pnpm install && pnpm rebuild better-sqlite3 -r 
+RUN pnpm install
 
 # Copy server code
 COPY packages/server ./packages/server
 
 # Build server
 RUN pnpm --filter @todo-app/server build
+
+# Rebuild better-sqlite3 explicitly to ensure native bindings are correct
+RUN npm_config_build_from_source=true pnpm rebuild better-sqlite3
 
 # Copy built frontend files
 COPY dist ./dist
