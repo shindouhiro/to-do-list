@@ -1,0 +1,34 @@
+{
+  "name": "@todo-app/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend server for Calendar Todo App",
+  "main": "index.ts",
+  "scripts": {
+    "start": "tsx index.ts",
+    "dev": "tsx watch index.ts",
+    "build": "tsc",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "todo",
+    "api",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^12.5.0",
+    "cors": "^2.8.5",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.2"
+  }
+}
