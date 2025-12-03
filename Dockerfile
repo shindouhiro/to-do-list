@@ -19,11 +19,11 @@ RUN echo "node-linker=hoisted" > .npmrc
 # Note: Using --no-frozen-lockfile to allow lockfile recreation if needed
 RUN pnpm install --no-frozen-lockfile
 
-# Rebuild better-sqlite3 for the container's architecture
-RUN cd packages/server && pnpm rebuild better-sqlite3
-
 # Build server in the container
 RUN pnpm --filter @todo-app/server build
+
+# Rebuild better-sqlite3 after build to ensure native bindings are correct
+RUN pnpm rebuild better-sqlite3
 
 # Build client in the container (if not already built)
 RUN pnpm --filter @todo-app/client build
