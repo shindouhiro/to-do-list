@@ -16,7 +16,8 @@ COPY . .
 RUN echo "node-linker=hoisted" > .npmrc
 
 # Install all dependencies in the container
-RUN pnpm install --frozen-lockfile
+# Note: Using --no-frozen-lockfile to allow lockfile recreation if needed
+RUN pnpm install --no-frozen-lockfile
 
 # Build server in the container
 RUN pnpm --filter @todo-app/server build
