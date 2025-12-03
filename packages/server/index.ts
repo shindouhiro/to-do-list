@@ -29,7 +29,7 @@ app.get('/health', (req: Request, res: Response) => {
 app.use('/api', apiRouter);
 
 // Serve static files
-const distPath = path.join(__dirname, '../../dist');
+const distPath = path.join(__dirname, '../../client/dist');
 app.use(express.static(distPath));
 
 // 404 handler for API routes
