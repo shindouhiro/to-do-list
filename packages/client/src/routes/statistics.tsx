@@ -1,9 +1,15 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { api, type Todo, type Category } from '../api'
 import { Statistics } from '../components/Statistics'
+import { authApi } from '../lib/auth'
 
 export const Route = createFileRoute('/statistics')({
+  beforeLoad: async () => {
+    if (!authApi.isAuthenticated()) {
+      throw redirect({ to: '/login' })
+    }
+  },
   component: StatisticsPage,
 })
 

@@ -1,20 +1,23 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import db from '../db.js';
 import { asyncHandler } from '../middleware.js';
 import type { Category } from '../types.js';
+import type { AuthRequest } from '../auth.js';
 
 /**
  * Category controllers
  */
 
-// Get all categories
-export const getAllCategories = asyncHandler(async (req: Request, res: Response) => {
-  const categories = db.prepare('SELECT * FROM categories ORDER BY name').all() as Category[];
+// Get all categories for current user
+export const getAllCategories = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
+  const categories = db.prepare('SELECT * FROM categories WHERE userId = ? ORDER BY name').all(userId) as Category[];
   res.json(categories);
 });
 
 // Add category
-export const addCategory = asyncHandler(async (req: Request, res: Response) => {
+export const addCategory = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
   const { id, name, icon, color } = req.body as Category;
 
   if (!id || !name || !icon || !color) {
@@ -23,8 +26,8 @@ export const addCategory = asyncHandler(async (req: Request, res: Response) => {
   }
 
   try {
-    const stmt = db.prepare('INSERT INTO categories (id, name, icon, color) VALUES (?, ?, ?, ?)');
-    stmt.run(id, name, icon, color);
+    const stmt = db.prepare('INSERT INTO categories (id, name, icon, color, userId) VALUES (?, ?, ?, ?, ?)');
+    stmt.run(id, name, icon, color, userId);
 
     res.status(201).json({ success: true, id });
   } catch (error: any) {
@@ -38,14 +41,15 @@ export const addCategory = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // Update category
-export const updateCategory = asyncHandler(async (req: Request, res: Response) => {
+export const updateCategory = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
   const { id } = req.params;
   const { name, icon, color } = req.body as Partial<Category>;
 
   const stmt = db.prepare(
-    'UPDATE categories SET name = COALESCE(?, name), icon = COALESCE(?, icon), color = COALESCE(?, color) WHERE id = ?'
+    'UPDATE categories SET name = COALESCE(?, name), icon = COALESCE(?, icon), color = COALESCE(?, color) WHERE id = ? AND userId = ?'
   );
-  const result = stmt.run(name, icon, color, id);
+  const result = stmt.run(name, icon, color, id, userId);
 
   if (result.changes === 0) {
     res.status(404).json({ error: 'Category not found' });
@@ -55,12 +59,14 @@ export const updateCategory = asyncHandler(async (req: Request, res: Response) =
   res.json({ success: true });
 });
 
+
 // Delete category
-export const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
+export const deleteCategory = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
   const { id } = req.params;
 
-  const stmt = db.prepare('DELETE FROM categories WHERE id = ?');
-  const result = stmt.run(id);
+  const stmt = db.prepare('DELETE FROM categories WHERE id = ? AND userId = ?');
+  const result = stmt.run(id, userId);
 
   if (result.changes === 0) {
     res.status(404).json({ error: 'Category not found' });

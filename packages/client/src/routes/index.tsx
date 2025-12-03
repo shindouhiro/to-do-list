@@ -1,11 +1,17 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { useEffect, useState, useCallback } from 'react'
 import { api, type Todo, type Category } from '../api'
 import { Calendar } from '../components/Calendar'
 import { DataToolbar } from '../components/DataToolbar'
 import { generateUUID } from '../lib/uuid'
+import { authApi } from '../lib/auth'
 
 export const Route = createFileRoute('/')({
+  beforeLoad: async () => {
+    if (!authApi.isAuthenticated()) {
+      throw redirect({ to: '/login' })
+    }
+  },
   component: App,
 })
 
@@ -101,6 +107,28 @@ function App() {
                 </svg>
                 Categories
               </Link>
+              <button
+                onClick={() => {
+                  authApi.logout()
+                  window.location.href = '/login'
+                }}
+                className="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 rounded-xl text-white font-medium transition-all hover:scale-105 shadow-lg text-sm md:text-base"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                Logout
+              </button>
             </div>
           </div>
           <p className="text-white/60 text-lg">Organize your life, one day at a time.</p>

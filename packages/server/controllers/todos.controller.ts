@@ -1,15 +1,17 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import db from '../db.js';
 import { asyncHandler } from '../middleware.js';
 import type { Todo, TodoResponse } from '../types.js';
+import type { AuthRequest } from '../auth.js';
 
 /**
  * Todo controllers
  */
 
-// Get all todos
-export const getAllTodos = asyncHandler(async (req: Request, res: Response) => {
-  const todos = db.prepare('SELECT * FROM todos ORDER BY date DESC').all() as Todo[];
+// Get all todos for current user
+export const getAllTodos = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
+  const todos = db.prepare('SELECT * FROM todos WHERE userId = ? ORDER BY date DESC').all(userId) as Todo[];
 
   // Convert completed (0/1) to boolean
   const formattedTodos: TodoResponse[] = todos.map(todo => ({
@@ -21,7 +23,8 @@ export const getAllTodos = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // Add todo
-export const addTodo = asyncHandler(async (req: Request, res: Response) => {
+export const addTodo = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
   const { id, text, completed, date, categoryId } = req.body;
 
   if (!id || !text || !date) {
@@ -31,9 +34,9 @@ export const addTodo = asyncHandler(async (req: Request, res: Response) => {
 
   try {
     const stmt = db.prepare(
-      'INSERT INTO todos (id, text, completed, date, categoryId) VALUES (?, ?, ?, ?, ?)'
+      'INSERT INTO todos (id, text, completed, date, categoryId, userId) VALUES (?, ?, ?, ?, ?, ?)'
     );
-    stmt.run(id, text, completed ? 1 : 0, date, categoryId);
+    stmt.run(id, text, completed ? 1 : 0, date, categoryId, userId);
 
     res.status(201).json({ success: true, id });
   } catch (error: any) {
@@ -47,7 +50,8 @@ export const addTodo = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // Update todo
-export const updateTodo = asyncHandler(async (req: Request, res: Response) => {
+export const updateTodo = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
   const { id } = req.params;
   const { completed, text, date, categoryId } = req.body;
 
@@ -77,8 +81,8 @@ export const updateTodo = asyncHandler(async (req: Request, res: Response) => {
     return;
   }
 
-  values.push(id);
-  const stmt = db.prepare(`UPDATE todos SET ${updates.join(', ')} WHERE id = ?`);
+  values.push(id, userId);
+  const stmt = db.prepare(`UPDATE todos SET ${updates.join(', ')} WHERE id = ? AND userId = ?`);
   const result = stmt.run(...values);
 
   if (result.changes === 0) {
@@ -90,11 +94,12 @@ export const updateTodo = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // Delete todo
-export const deleteTodo = asyncHandler(async (req: Request, res: Response) => {
+export const deleteTodo = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
   const { id } = req.params;
 
-  const stmt = db.prepare('DELETE FROM todos WHERE id = ?');
-  const result = stmt.run(id);
+  const stmt = db.prepare('DELETE FROM todos WHERE id = ? AND userId = ?');
+  const result = stmt.run(id, userId);
 
   if (result.changes === 0) {
     res.status(404).json({ error: 'Todo not found' });
@@ -104,14 +109,16 @@ export const deleteTodo = asyncHandler(async (req: Request, res: Response) => {
   res.json({ success: true });
 });
 
-// Clear all todos
-export const clearAllTodos = asyncHandler(async (req: Request, res: Response) => {
-  const result = db.prepare('DELETE FROM todos').run();
+// Clear all todos for current user
+export const clearAllTodos = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
+  const result = db.prepare('DELETE FROM todos WHERE userId = ?').run(userId);
   res.json({ success: true, deletedCount: result.changes });
 });
 
 // Bulk add todos
-export const bulkAddTodos = asyncHandler(async (req: Request, res: Response) => {
+export const bulkAddTodos = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
   const todos = req.body;
 
   if (!Array.isArray(todos)) {
@@ -125,7 +132,7 @@ export const bulkAddTodos = asyncHandler(async (req: Request, res: Response) => 
   }
 
   const insert = db.prepare(
-    'INSERT INTO todos (id, text, completed, date, categoryId) VALUES (@id, @text, @completed, @date, @categoryId)'
+    'INSERT INTO todos (id, text, completed, date, categoryId, userId) VALUES (@id, @text, @completed, @date, @categoryId, @userId)'
   );
 
   const insertMany = db.transaction((todos: any[]) => {
@@ -136,7 +143,8 @@ export const bulkAddTodos = asyncHandler(async (req: Request, res: Response) => 
 
       insert.run({
         ...todo,
-        completed: todo.completed ? 1 : 0
+        completed: todo.completed ? 1 : 0,
+        userId
       });
     }
   });

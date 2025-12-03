@@ -1,11 +1,17 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { useEffect, useState, useCallback } from 'react'
 import { api, type Category } from '../api'
 import { CategoryManager } from '../components/CategoryManager'
 import { ArrowLeft } from 'lucide-react'
 import { generateUUID } from '../lib/uuid'
+import { authApi } from '../lib/auth'
 
 export const Route = createFileRoute('/categories')({
+  beforeLoad: async () => {
+    if (!authApi.isAuthenticated()) {
+      throw redirect({ to: '/login' })
+    }
+  },
   component: CategoriesPage,
 })
 
