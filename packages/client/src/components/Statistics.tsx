@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import type { Category, Todo } from '../db'
 import { endOfWeek, format, isSameDay, startOfDay, startOfWeek, subDays } from 'date-fns'
 import { enUS, zhCN } from 'date-fns/locale'
 import { Calendar as CalendarIcon, CheckCircle2, Circle, Target, TrendingUp } from 'lucide-react'
 import * as Icons from 'lucide-react'
+import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '../lib/utils'
-import type {Category, Todo} from '../db';
 
 interface StatisticsProps {
   todos: Array<Todo>
@@ -38,7 +38,7 @@ export function Statistics({ todos, categories }: StatisticsProps) {
         date,
         total: dayTodos.length,
         completed: dayCompleted,
-        rate: dayTodos.length > 0 ? (dayCompleted / dayTodos.length) * 100 : 0
+        rate: dayTodos.length > 0 ? (dayCompleted / dayTodos.length) * 100 : 0,
       }
     })
 
@@ -53,9 +53,10 @@ export function Statistics({ todos, categories }: StatisticsProps) {
         acc[dayKey] = { total: 0, completed: 0, date: todo.date }
       }
       acc[dayKey].total++
-      if (todo.completed) acc[dayKey].completed++
+      if (todo.completed)
+        acc[dayKey].completed++
       return acc
-    }, {} as Record<string, { total: number; completed: number; date: Date }>)
+    }, {} as Record<string, { total: number, completed: number, date: Date }>)
 
     const bestDay = Object.values(dayStats).reduce((best, current) => {
       const currentRate = current.total > 0 ? current.completed / current.total : 0
@@ -64,7 +65,7 @@ export function Statistics({ todos, categories }: StatisticsProps) {
     }, { total: 0, completed: 0, date: now })
 
     // Category statistics
-    const categoryStats = categories.map(category => {
+    const categoryStats = categories.map((category) => {
       const categoryTodos = todos.filter(t => t.categoryId === category.id)
       const categoryCompleted = categoryTodos.filter(t => t.completed).length
       const categoryRate = categoryTodos.length > 0 ? (categoryCompleted / categoryTodos.length) * 100 : 0
@@ -74,7 +75,7 @@ export function Statistics({ todos, categories }: StatisticsProps) {
         total: categoryTodos.length,
         completed: categoryCompleted,
         pending: categoryTodos.length - categoryCompleted,
-        completionRate: Math.round(categoryRate)
+        completionRate: Math.round(categoryRate),
       }
     }).filter(stat => stat.total > 0) // Only show categories with tasks
 
@@ -94,7 +95,7 @@ export function Statistics({ todos, categories }: StatisticsProps) {
       avgPerDay,
       bestDay,
       categoryStats,
-      mostProductiveCategory
+      mostProductiveCategory,
     }
   }, [todos, categories])
 
@@ -164,7 +165,10 @@ export function Statistics({ todos, categories }: StatisticsProps) {
                 </defs>
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-6xl font-bold text-white">{stats.completionRate}%</span>
+                <span className="text-6xl font-bold text-white">
+                  {stats.completionRate}
+                  %
+                </span>
                 <span className="text-white/60 mt-2">{t('statistics.complete')}</span>
               </div>
             </div>
@@ -192,7 +196,9 @@ export function Statistics({ todos, categories }: StatisticsProps) {
                     {format(day.date, isChinese ? 'M月d日 EEE' : 'EEE, MMM d', { locale: dateLocale })}
                   </span>
                   <span className="text-white/60">
-                    {day.completed}/{day.total}
+                    {day.completed}
+                    /
+                    {day.total}
                   </span>
                 </div>
                 <div className="relative h-3 bg-white/10 rounded-full overflow-hidden">
@@ -217,7 +223,9 @@ export function Statistics({ todos, categories }: StatisticsProps) {
             <h4 className="text-lg font-semibold text-white">{t('statistics.thisWeek')}</h4>
           </div>
           <div className="text-4xl font-bold text-white mb-2">
-            {stats.thisWeekCompleted}/{stats.thisWeekTodos}
+            {stats.thisWeekCompleted}
+            /
+            {stats.thisWeekTodos}
           </div>
           <p className="text-white/60 text-sm">{t('statistics.tasksCompletedThisWeek')}</p>
         </div>
@@ -276,7 +284,11 @@ export function Statistics({ todos, categories }: StatisticsProps) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-white font-semibold truncate">{category.name}</h4>
-                      <p className="text-white/60 text-sm">{total} {t('statistics.tasks')}</p>
+                      <p className="text-white/60 text-sm">
+                        {total}
+                        {' '}
+                        {t('statistics.tasks')}
+                      </p>
                     </div>
                   </div>
 
@@ -284,14 +296,17 @@ export function Statistics({ todos, categories }: StatisticsProps) {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-white/80">{t('statistics.progress')}</span>
-                      <span className="text-white font-semibold">{completionRate}%</span>
+                      <span className="text-white font-semibold">
+                        {completionRate}
+                        %
+                      </span>
                     </div>
                     <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
                       <div
                         className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
                         style={{
                           width: `${completionRate}%`,
-                          backgroundColor: category.color
+                          backgroundColor: category.color,
                         }}
                       />
                     </div>

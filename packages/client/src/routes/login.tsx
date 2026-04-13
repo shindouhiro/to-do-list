@@ -1,9 +1,9 @@
-import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
+import type { LoginRequest } from '../lib/auth'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { LogIn } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LogIn } from 'lucide-react'
-import {  authApi } from '../lib/auth'
-import type {LoginRequest} from '../lib/auth';
+import { authApi } from '../lib/auth'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -27,9 +27,11 @@ function LoginPage() {
     try {
       await authApi.login(formData)
       navigate({ to: '/' })
-    } catch (err) {
+    }
+    catch (err) {
       setError(err instanceof Error ? err.message : t('auth.loginFailed'))
-    } finally {
+    }
+    finally {
       setLoading(false)
     }
   }
@@ -66,7 +68,7 @@ function LoginPage() {
                 id="login-email-input"
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={e => setFormData({ ...formData, email: e.target.value })}
                 className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                 placeholder={t('auth.emailPlaceholder')}
                 required
@@ -82,7 +84,7 @@ function LoginPage() {
                 id="login-password-input"
                 type="password"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={e => setFormData({ ...formData, password: e.target.value })}
                 className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                 placeholder={t('auth.passwordPlaceholder')}
                 required
@@ -101,7 +103,8 @@ function LoginPage() {
 
           <div className="mt-6 text-center">
             <p className="text-white/60 text-sm">
-              {t('auth.dontHaveAccount')}{' '}
+              {t('auth.dontHaveAccount')}
+              {' '}
               <Link
                 to="/register"
                 className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"

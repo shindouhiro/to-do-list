@@ -1,11 +1,11 @@
+import { ChevronDown, Globe } from 'lucide-react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, Globe } from 'lucide-react'
 import { cn } from '../lib/utils'
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' }
+  { code: 'zh', name: '中文', flag: '🇨🇳' },
 ]
 
 export function LanguageSwitcher({ className }: { className?: string }) {
@@ -36,14 +36,14 @@ export function LanguageSwitcher({ className }: { className?: string }) {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-lg border border-white/20 rounded-xl shadow-xl z-50">
-          {languages.map((language) => (
+          {languages.map(language => (
             <button
               id={`language-option-${language.code}`}
               key={language.code}
               onClick={() => handleLanguageChange(language.code)}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-100 transition-colors first:rounded-t-xl last:rounded-b-xl",
-                normalizedLanguage === language.code && 'bg-indigo-50 text-indigo-600'
+                'w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-100 transition-colors first:rounded-t-xl last:rounded-b-xl',
+                normalizedLanguage === language.code && 'bg-indigo-50 text-indigo-600',
               )}
             >
               <span className="text-lg">{language.flag}</span>

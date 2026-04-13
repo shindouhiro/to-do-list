@@ -1,8 +1,8 @@
+import type { Category } from '../db'
+import * as Icons from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import * as Icons from 'lucide-react'
 import { cn } from '../lib/utils'
-import type {Category} from '../db';
 
 interface CategorySelectorProps {
   categories: Array<Category>
@@ -22,7 +22,7 @@ export function CategorySelector({ categories, selectedCategoryId, onSelectCateg
           'flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 min-w-[100px] justify-center',
           !selectedCategoryId
             ? 'bg-white/20 text-white shadow-lg scale-105'
-            : 'bg-white/5 text-white/60 hover:bg-white/10'
+            : 'bg-white/5 text-white/60 hover:bg-white/10',
         )}
       >
         <GridIcon className="w-4 h-4" />
@@ -40,7 +40,7 @@ export function CategorySelector({ categories, selectedCategoryId, onSelectCateg
               'flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 min-w-[100px] justify-center',
               isSelected
                 ? 'text-white shadow-lg scale-105'
-                : 'bg-white/5 text-white/60 hover:bg-white/10'
+                : 'bg-white/5 text-white/60 hover:bg-white/10',
             )}
             style={isSelected ? { backgroundColor: category.color } : {}}
           >
@@ -59,7 +59,8 @@ interface CategoryBadgeProps {
 }
 
 export function CategoryBadge({ category, small = false }: CategoryBadgeProps) {
-  if (!category) return null
+  if (!category)
+    return null
 
   const IconComponent = Icons[category.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>
 
@@ -67,7 +68,7 @@ export function CategoryBadge({ category, small = false }: CategoryBadgeProps) {
     <div
       className={cn(
         'inline-flex items-center gap-1.5 rounded-lg font-medium text-white',
-        small ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'
+        small ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm',
       )}
       style={{ backgroundColor: category.color }}
     >
@@ -102,12 +103,14 @@ export function CategoryPicker({ categories, selectedCategoryId, onSelectCategor
                 'flex items-center gap-2 px-3 py-2 rounded-xl font-medium transition-all duration-300 border-2',
                 isSelected
                   ? 'text-white shadow-lg scale-105'
-                  : 'bg-white/5 text-white/60 hover:bg-white/10 border-white/10'
+                  : 'bg-white/5 text-white/60 hover:bg-white/10 border-white/10',
               )}
-              style={isSelected ? {
-                backgroundColor: category.color,
-                borderColor: category.color
-              } : {}}
+              style={isSelected
+                ? {
+                    backgroundColor: category.color,
+                    borderColor: category.color,
+                  }
+                : {}}
             >
               {IconComponent && <IconComponent className="w-4 h-4" />}
               <span className="text-sm">{category.name}</span>

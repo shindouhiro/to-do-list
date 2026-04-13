@@ -1,9 +1,9 @@
+import type { Todo } from '../api'
+import { Download, Info, Trash2, Upload } from 'lucide-react'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Download, Info, Trash2, Upload } from 'lucide-react'
-import {  api } from '../api'
+import { api } from '../api'
 import { cn } from '../lib/utils'
-import type {Todo} from '../api';
 
 interface DataToolbarProps {
   todos: Array<Todo>
@@ -31,7 +31,8 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
   // 导入数据
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    if (!file) return
+    if (!file)
+      return
 
     const reader = new FileReader()
     reader.onload = async (e) => {
@@ -48,7 +49,7 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
         // 转换日期字符串为 Date 对象
         const validTodos = importedTodos.map(todo => ({
           ...todo,
-          date: new Date(todo.date)
+          date: new Date(todo.date),
         }))
 
         // 清空现有数据并导入新数据
@@ -58,7 +59,8 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
         onRefresh?.()
 
         alert(t('dataToolbar.importSuccess', { count: validTodos.length }))
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Import error:', error)
         alert(t('dataToolbar.importFailed'))
       }
@@ -79,7 +81,7 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
     }
 
     const confirmed = window.confirm(
-      t('dataToolbar.clearAllConfirm', { count: todos.length })
+      t('dataToolbar.clearAllConfirm', { count: todos.length }),
     )
 
     if (confirmed) {
@@ -93,7 +95,7 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
   const stats = {
     total: todos.length,
     completed: todos.filter(t => t.completed).length,
-    pending: todos.filter(t => !t.completed).length
+    pending: todos.filter(t => !t.completed).length,
   }
 
   return (
@@ -103,11 +105,17 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
         <div className="flex items-center gap-3 text-white/80">
           <Info className="w-5 h-5 text-indigo-400" />
           <div className="text-sm">
-            <span className="font-semibold text-white">{stats.total}</span> {t('dataToolbar.total')}
+            <span className="font-semibold text-white">{stats.total}</span>
+            {' '}
+            {t('dataToolbar.total')}
             <span className="mx-2">•</span>
-            <span className="font-semibold text-green-400">{stats.completed}</span> {t('dataToolbar.done')}
+            <span className="font-semibold text-green-400">{stats.completed}</span>
+            {' '}
+            {t('dataToolbar.done')}
             <span className="mx-2">•</span>
-            <span className="font-semibold text-yellow-400">{stats.pending}</span> {t('dataToolbar.pending')}
+            <span className="font-semibold text-yellow-400">{stats.pending}</span>
+            {' '}
+            {t('dataToolbar.pending')}
           </div>
         </div>
 
@@ -117,9 +125,9 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
             onClick={handleExport}
             disabled={todos.length === 0}
             className={cn(
-              "flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 rounded-xl transition-all",
-              "bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30",
-              "disabled:opacity-50 disabled:cursor-not-allowed"
+              'flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 rounded-xl transition-all',
+              'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30',
+              'disabled:opacity-50 disabled:cursor-not-allowed',
             )}
             title={t('dataToolbar.exportAllTodos')}
           >
@@ -130,8 +138,8 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
           <button
             onClick={() => fileInputRef.current?.click()}
             className={cn(
-              "flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 rounded-xl transition-all",
-              "bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30"
+              'flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 rounded-xl transition-all',
+              'bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30',
             )}
             title={t('dataToolbar.importTodos')}
           >
@@ -150,9 +158,9 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
             onClick={handleClearAll}
             disabled={todos.length === 0}
             className={cn(
-              "flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 rounded-xl transition-all",
-              "bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30",
-              "disabled:opacity-50 disabled:cursor-not-allowed"
+              'flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 rounded-xl transition-all',
+              'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30',
+              'disabled:opacity-50 disabled:cursor-not-allowed',
             )}
             title={t('dataToolbar.clearAllTodos')}
           >

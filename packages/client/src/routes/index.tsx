@@ -1,12 +1,12 @@
-import { Link, createFileRoute, redirect } from '@tanstack/react-router'
+import type { Category, Todo } from '../api'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {   api } from '../api'
+import { api } from '../api'
 import { Calendar } from '../components/Calendar'
 import { DataToolbar } from '../components/DataToolbar'
-import { generateUUID } from '../lib/uuid'
 import { authApi } from '../lib/auth'
-import type {Category, Todo} from '../api';
+import { generateUUID } from '../lib/uuid'
 
 export const Route = createFileRoute('/')({
   beforeLoad: async () => {
@@ -26,11 +26,12 @@ function App() {
     try {
       const [todosData, categoriesData] = await Promise.all([
         api.todos.getAll(),
-        api.categories.getAll()
+        api.categories.getAll(),
       ])
       setTodos(todosData)
       setCategories(categoriesData)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to fetch data:', error)
     }
   }, [])

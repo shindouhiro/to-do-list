@@ -1,9 +1,9 @@
-import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
+import type { RegisterRequest } from '../lib/auth'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { UserPlus } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { UserPlus } from 'lucide-react'
-import {  authApi } from '../lib/auth'
-import type {RegisterRequest} from '../lib/auth';
+import { authApi } from '../lib/auth'
 
 export const Route = createFileRoute('/register')({
   component: RegisterPage,
@@ -34,9 +34,11 @@ function RegisterPage() {
     try {
       await authApi.register(formData)
       navigate({ to: '/' })
-    } catch (err) {
+    }
+    catch (err) {
       setError(err instanceof Error ? err.message : t('auth.registrationFailed'))
-    } finally {
+    }
+    finally {
       setLoading(false)
     }
   }
@@ -73,7 +75,7 @@ function RegisterPage() {
                 id="register-name-input"
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
                 className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
                 placeholder={t('auth.namePlaceholder')}
                 required
@@ -89,7 +91,7 @@ function RegisterPage() {
                 id="register-email-input"
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={e => setFormData({ ...formData, email: e.target.value })}
                 className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
                 placeholder={t('auth.emailPlaceholder')}
                 required
@@ -104,7 +106,7 @@ function RegisterPage() {
                 id="register-password-input"
                 type="password"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={e => setFormData({ ...formData, password: e.target.value })}
                 className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
                 placeholder={t('auth.passwordPlaceholder')}
                 required
@@ -127,7 +129,8 @@ function RegisterPage() {
 
           <div className="mt-6 text-center">
             <p className="text-white/60 text-sm">
-              {t('auth.alreadyHaveAccount')}{' '}
+              {t('auth.alreadyHaveAccount')}
+              {' '}
               <Link
                 to="/login"
                 className="text-purple-400 hover:text-purple-300 font-medium transition-colors"

@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import type { Category } from '../api'
 import * as Icons from 'lucide-react'
 import { Check, Edit2, Plus, Trash2 } from 'lucide-react'
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '../lib/utils'
-import type {Category} from '../api';
 
 interface CategoryManagerProps {
   categories: Array<Category>
@@ -14,9 +14,24 @@ interface CategoryManagerProps {
 
 // Available icons for categories
 const AVAILABLE_ICONS = [
-  'Briefcase', 'User', 'ShoppingCart', 'Heart', 'BookOpen', 'Home',
-  'Coffee', 'Dumbbell', 'Music', 'Plane', 'Camera', 'Code',
-  'Palette', 'Gamepad2', 'Utensils', 'Car', 'GraduationCap', 'Stethoscope'
+  'Briefcase',
+  'User',
+  'ShoppingCart',
+  'Heart',
+  'BookOpen',
+  'Home',
+  'Coffee',
+  'Dumbbell',
+  'Music',
+  'Plane',
+  'Camera',
+  'Code',
+  'Palette',
+  'Gamepad2',
+  'Utensils',
+  'Car',
+  'GraduationCap',
+  'Stethoscope',
 ] as const
 
 // Predefined color palette
@@ -47,7 +62,8 @@ export function CategoryManager({ categories, onAddCategory, onUpdateCategory, o
       if (editingId) {
         onUpdateCategory(editingId, formData)
         setEditingId(null)
-      } else {
+      }
+      else {
         onAddCategory(formData)
         setIsAdding(false)
       }
@@ -101,7 +117,7 @@ export function CategoryManager({ categories, onAddCategory, onUpdateCategory, o
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={e => setFormData({ ...formData, name: e.target.value })}
               placeholder={t('categories.enterCategoryName')}
               className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
               autoFocus
@@ -124,7 +140,7 @@ export function CategoryManager({ categories, onAddCategory, onUpdateCategory, o
                       'p-3 rounded-xl transition-all duration-200 border-2',
                       isSelected
                         ? 'bg-indigo-500 border-indigo-400 scale-110'
-                        : 'bg-white/5 border-white/10 hover:bg-white/10'
+                        : 'bg-white/5 border-white/10 hover:bg-white/10',
                     )}
                   >
                     {IconComponent && <IconComponent className="w-5 h-5 text-white mx-auto" />}
@@ -147,7 +163,7 @@ export function CategoryManager({ categories, onAddCategory, onUpdateCategory, o
                     onClick={() => setFormData({ ...formData, color })}
                     className={cn(
                       'w-full aspect-square rounded-xl transition-all duration-200 border-2 flex items-center justify-center',
-                      isSelected ? 'border-white scale-110' : 'border-transparent hover:scale-105'
+                      isSelected ? 'border-white scale-110' : 'border-transparent hover:scale-105',
                     )}
                     style={{ backgroundColor: color }}
                   >
@@ -180,50 +196,52 @@ export function CategoryManager({ categories, onAddCategory, onUpdateCategory, o
 
       {/* Categories List */}
       <div className="space-y-3">
-        {categories.length === 0 ? (
-          <div className="text-center text-white/40 py-8">
-            {t('categories.noCategoriesYet')}
-          </div>
-        ) : (
-          categories.map((category) => {
-            const IconComponent = Icons[category.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>
-            return (
-              <div
-                key={category.id}
-                className="group flex items-center gap-4 bg-black/20 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-all"
-              >
-                <div
-                  className="p-3 rounded-xl flex-shrink-0"
-                  style={{ backgroundColor: category.color }}
-                >
-                  {IconComponent && <IconComponent className="w-5 h-5 text-white" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-white font-medium">{category.name}</h4>
-                  <p className="text-white/40 text-sm">{category.color}</p>
-                </div>
-                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    id={`category-edit-${category.id}`}
-                    onClick={() => handleEdit(category)}
-                    className="p-2 text-white/60 hover:text-blue-400 transition-colors"
-                    title={t('categories.editCategoryAction')}
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    id={`category-delete-${category.id}`}
-                    onClick={() => handleDelete(category.id)}
-                    className="p-2 text-white/60 hover:text-red-400 transition-colors"
-                    title={t('categories.deleteCategoryAction')}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+        {categories.length === 0
+          ? (
+              <div className="text-center text-white/40 py-8">
+                {t('categories.noCategoriesYet')}
               </div>
             )
-          })
-        )}
+          : (
+              categories.map((category) => {
+                const IconComponent = Icons[category.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>
+                return (
+                  <div
+                    key={category.id}
+                    className="group flex items-center gap-4 bg-black/20 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-all"
+                  >
+                    <div
+                      className="p-3 rounded-xl flex-shrink-0"
+                      style={{ backgroundColor: category.color }}
+                    >
+                      {IconComponent && <IconComponent className="w-5 h-5 text-white" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-white font-medium">{category.name}</h4>
+                      <p className="text-white/40 text-sm">{category.color}</p>
+                    </div>
+                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        id={`category-edit-${category.id}`}
+                        onClick={() => handleEdit(category)}
+                        className="p-2 text-white/60 hover:text-blue-400 transition-colors"
+                        title={t('categories.editCategoryAction')}
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        id={`category-delete-${category.id}`}
+                        onClick={() => handleDelete(category.id)}
+                        className="p-2 text-white/60 hover:text-red-400 transition-colors"
+                        title={t('categories.deleteCategoryAction')}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )
+              })
+            )}
       </div>
     </div>
   )

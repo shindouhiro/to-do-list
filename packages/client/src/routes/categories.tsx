@@ -1,12 +1,12 @@
-import { Link, createFileRoute, redirect } from '@tanstack/react-router'
+import type { Category } from '../api'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
+import { ArrowLeft } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowLeft } from 'lucide-react'
-import {  api } from '../api'
+import { api } from '../api'
 import { CategoryManager } from '../components/CategoryManager'
-import { generateUUID } from '../lib/uuid'
 import { authApi } from '../lib/auth'
-import type {Category} from '../api';
+import { generateUUID } from '../lib/uuid'
 
 export const Route = createFileRoute('/categories')({
   beforeLoad: async () => {
@@ -25,7 +25,8 @@ function CategoriesPage() {
     try {
       const data = await api.categories.getAll()
       setCategories(data)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to fetch categories:', error)
     }
   }, [])

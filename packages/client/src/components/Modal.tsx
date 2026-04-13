@@ -1,6 +1,6 @@
+import { X } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { X } from 'lucide-react'
 import { cn } from '../lib/utils'
 
 interface ModalProps {
@@ -15,7 +15,8 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
-    } else {
+    }
+    else {
       document.body.style.overflow = 'unset'
     }
     return () => {
@@ -23,16 +24,17 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
     }
   }, [isOpen])
 
-  if (!isOpen) return null
+  if (!isOpen)
+    return null
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div
         className={cn(
-          "bg-gray-900/90 border border-white/10 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200",
-          className
+          'bg-gray-900/90 border border-white/10 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200',
+          className,
         )}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <h3 className="text-xl font-bold text-white">{title}</h3>
@@ -48,6 +50,6 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   )
 }

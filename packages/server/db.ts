@@ -166,12 +166,12 @@ if (count.count === 0) {
 
   const insert = db.prepare('INSERT INTO categories (id, name, icon, color, userId) VALUES (@id, @name, @icon, @color, @userId)');
   const defaultCategories = [
-    { id: 'work', name: 'Work', icon: 'Briefcase', color: '#3b82f6', userId: demoUserId },
-    { id: 'personal', name: 'Personal', icon: 'User', color: '#10b981', userId: demoUserId },
-    { id: 'shopping', name: 'Shopping', icon: 'ShoppingCart', color: '#f59e0b', userId: demoUserId },
-    { id: 'health', name: 'Health', icon: 'Heart', color: '#ef4444', userId: demoUserId },
-    { id: 'study', name: 'Study', icon: 'BookOpen', color: '#8b5cf6', userId: demoUserId },
-    { id: 'home', name: 'Home', icon: 'Home', color: '#ec4899', userId: demoUserId },
+    { id: 'work', name: '工作', icon: 'Briefcase', color: '#3b82f6', userId: demoUserId },
+    { id: 'personal', name: '个人', icon: 'User', color: '#10b981', userId: demoUserId },
+    { id: 'shopping', name: '购物', icon: 'ShoppingCart', color: '#f59e0b', userId: demoUserId },
+    { id: 'health', name: '健康', icon: 'Heart', color: '#ef4444', userId: demoUserId },
+    { id: 'study', name: '学习', icon: 'BookOpen', color: '#8b5cf6', userId: demoUserId },
+    { id: 'home', name: '生活', icon: 'Home', color: '#ec4899', userId: demoUserId },
   ];
 
   const insertMany = db.transaction((cats: typeof defaultCategories) => {
