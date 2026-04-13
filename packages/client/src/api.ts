@@ -122,6 +122,15 @@ export const api = {
       if (!res.ok)
         await handleApiError(res, 'Failed to clear todos')
     },
+    deleteBulk: async (ids: string[]): Promise<void> => {
+      const res = await fetch(`${API_URL}/todos/bulk`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+        body: JSON.stringify({ ids }),
+      })
+      if (!res.ok)
+        await handleApiError(res, 'Failed to delete selected todos')
+    },
     bulkAdd: async (todos: Todo[]): Promise<void> => {
       const res = await fetch(`${API_URL}/todos/bulk`, {
         method: 'POST',

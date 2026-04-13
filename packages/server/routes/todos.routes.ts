@@ -7,6 +7,7 @@ router.get('/', todosController.getAllTodos);
 router.post('/', todosController.addTodo);
 router.post('/bulk', todosController.bulkAddTodos);
 router.put('/:id', todosController.updateTodo);
+router.delete('/bulk', todosController.deleteSelectedTodos);
 router.delete('/:id', todosController.deleteTodo);
 router.delete('/', todosController.clearAllTodos);
 

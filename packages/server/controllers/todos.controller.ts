@@ -153,3 +153,24 @@ export const bulkAddTodos = asyncHandler(async (req: AuthRequest, res: Response)
 
   res.status(201).json({ success: true, count: todos.length });
 });
+
+// Delete selected todos
+export const deleteSelectedTodos = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.user!.userId;
+  const { ids } = req.body;
+
+  if (!Array.isArray(ids) || ids.length === 0) {
+    res.status(400).json({ error: 'Expected non-empty array of IDs' });
+    return;
+  }
+
+  const stmt = db.prepare('DELETE FROM todos WHERE id = ? AND userId = ?');
+  const deleteTransaction = db.transaction((ids: string[]) => {
+    for (const id of ids) {
+      stmt.run(id, userId);
+    }
+  });
+
+  deleteTransaction(ids);
+  res.json({ success: true, deletedCount: ids.length });
+});

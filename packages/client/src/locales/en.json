@@ -141,5 +141,19 @@
   },
   "languageSwitcher": {
     "toggle": "Switch language"
+  },
+  "taskView": {
+    "calendar": "Calendar View",
+    "table": "Table View"
+  },
+  "table": {
+    "content": "Task Content",
+    "date": "Date",
+    "category": "Category",
+    "actions": "Actions",
+    "noMatchingTasks": "No matching tasks found",
+    "selectAll": "Select All",
+    "deleteSelected": "Delete Selected",
+    "selectedCount": "{{count}} selected"
   }
 }
