@@ -2,9 +2,9 @@ import type { Category, Todo } from '../../api'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { Check, CheckSquare, Square, Trash2 } from 'lucide-react'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '../../lib/utils'
+import { useTaskSelection } from '../../hooks/useTaskSelection'
 
 interface TaskTableProps {
   todos: Todo[]
@@ -16,35 +16,21 @@ interface TaskTableProps {
 
 export function TaskTable({ todos, categories, onToggle, onDelete, onDeleteMultiple }: TaskTableProps) {
   const { t } = useTranslation()
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-
-  const isAllSelected = todos.length > 0 && selectedIds.size === todos.length
-  const isSomeSelected = selectedIds.size > 0 && selectedIds.size < todos.length
-
-  const toggleSelectAll = () => {
-    if (isAllSelected) {
-      setSelectedIds(new Set())
-    }
-    else {
-      setSelectedIds(new Set(todos.map(t => t.id)))
-    }
-  }
-
-  const toggleSelectOne = (id: string) => {
-    const next = new Set(selectedIds)
-    if (next.has(id)) {
-      next.delete(id)
-    }
-    else {
-      next.add(id)
-    }
-    setSelectedIds(next)
-  }
+  const todoIds = todos.map(t => t.id)
+  
+  const {
+    selectedIds,
+    isAllSelected,
+    isSomeSelected,
+    toggleSelectAll,
+    toggleSelectOne,
+    clearSelection,
+  } = useTaskSelection(todoIds)
 
   const handleDeleteSelected = () => {
     if (onDeleteMultiple) {
       onDeleteMultiple(Array.from(selectedIds))
-      setSelectedIds(new Set())
+      clearSelection()
     }
   }
 
