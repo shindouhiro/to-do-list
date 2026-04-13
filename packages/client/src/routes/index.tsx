@@ -5,7 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { api } from '../api'
 import { Calendar } from '../components/Calendar'
 import { DataToolbar } from '../components/DataToolbar'
+import { TaskTable } from '../components/TaskView/TaskTable'
 import { authApi } from '../lib/auth'
+import { cn } from '../lib/utils'
 import { generateUUID } from '../lib/uuid'
 
 export const Route = createFileRoute('/')({
@@ -21,6 +23,7 @@ function App() {
   const { t } = useTranslation()
   const [todos, setTodos] = useState<Array<Todo>>([])
   const [categories, setCategories] = useState<Array<Category>>([])
+  const [viewMode, setViewMode] = useState<'calendar' | 'table'>('calendar')
 
   const fetchData = useCallback(async () => {
     try {
@@ -138,18 +141,62 @@ function App() {
           <p className="text-white/60 text-lg">{t('home.subtitle')}</p>
         </header>
 
-        {/* Data Management Toolbar */}
-        <div className="mb-8 max-w-6xl mx-auto">
-          <DataToolbar todos={todos} onRefresh={fetchData} />
+        {/* Unified Control Bar */}
+        <div className="max-w-6xl mx-auto mb-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-2xl flex flex-col xl:flex-row items-center justify-between gap-6">
+
+          {/* View Switcher component */}
+          <div className="flex bg-black/40 p-1 rounded-xl w-full xl:w-auto shadow-inner border border-white/5">
+            <button
+              onClick={() => setViewMode('calendar')}
+              className={cn(
+                'flex-1 xl:flex-none px-6 py-2.5 rounded-lg transition-all duration-300 tracking-wide text-sm font-bold flex items-center justify-center gap-2',
+                viewMode === 'calendar'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]'
+                  : 'text-white/50 hover:text-white hover:bg-white/10',
+              )}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+              日历视图
+            </button>
+            <button
+              onClick={() => setViewMode('table')}
+              className={cn(
+                'flex-1 xl:flex-none px-6 py-2.5 rounded-lg transition-all duration-300 tracking-wide text-sm font-bold flex items-center justify-center gap-2',
+                viewMode === 'table'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]'
+                  : 'text-white/50 hover:text-white hover:bg-white/10',
+              )}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+              列表视图
+            </button>
+          </div>
+
+          <div className="w-full xl:w-auto">
+            <DataToolbar todos={todos} onRefresh={fetchData} />
+          </div>
         </div>
 
-        <Calendar
-          todos={todos}
-          categories={categories}
-          onAddTodo={handleAddTodo}
-          onToggleTodo={handleToggleTodo}
-          onDeleteTodo={handleDeleteTodo}
-        />
+        {viewMode === 'calendar'
+          ? (
+              <Calendar
+                todos={todos}
+                categories={categories}
+                onAddTodo={handleAddTodo}
+                onToggleTodo={handleToggleTodo}
+                onDeleteTodo={handleDeleteTodo}
+              />
+            )
+          : (
+              <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-[2rem] p-8 shadow-xl">
+                <TaskTable
+                  todos={todos}
+                  categories={categories}
+                  onToggle={handleToggleTodo}
+                  onDelete={handleDeleteTodo}
+                />
+              </div>
+            )}
       </div>
     </div>
   )
