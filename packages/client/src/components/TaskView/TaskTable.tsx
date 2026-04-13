@@ -1,7 +1,7 @@
+import { format } from 'date-fns'
+import { zhCN } from 'date-fns/locale'
 import type { Category, Todo } from '../../api'
 import { Check, Trash2 } from 'lucide-react'
-import React from 'react'
-import { useTranslation } from 'react-i18next'
 import { cn } from '../../lib/utils'
 
 interface TaskTableProps {
@@ -61,7 +61,7 @@ export function TaskTable({ todos, categories, onToggle, onDelete }: TaskTablePr
                         </span>
                       </td>
                       <td className="py-4 px-6 text-white/60 text-sm">
-                        {todo.date}
+                        {format(todo.date, 'yyyy-MM-dd', { locale: zhCN })}
                       </td>
                       <td className="py-4 px-6">
                         {category
