@@ -14,7 +14,7 @@ import {
 } from 'date-fns'
 import { enUS, zhCN } from 'date-fns/locale'
 import { Check, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react'
-import { Solar } from 'lunar-javascript'
+import { HolidayUtil, Solar } from 'lunar-javascript'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '../lib/utils'
@@ -156,6 +156,25 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
                     isToday(day) && !isSelected && 'border-indigo-400 border-2',
                   )}
                 >
+                  {/* Holiday Badge */}
+                  {isChinese && (() => {
+                    const holiday = HolidayUtil.getHoliday(day.getFullYear(), day.getMonth() + 1, day.getDate())
+                    if (!holiday)
+                      return null
+                    const isWork = holiday.isWork()
+                    return (
+                      <div className={cn(
+                        'absolute top-1 right-1 md:top-2 md:right-2 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-md text-[8px] md:text-[10px] font-bold shadow-sm',
+                        isWork
+                          ? 'bg-amber-500/80 text-white'
+                          : 'bg-rose-500/80 text-white',
+                      )}
+                      >
+                        {isWork ? '班' : '休'}
+                      </div>
+                    )
+                  })()}
+
                   <span
                     className={cn(
                       'text-sm md:text-lg font-semibold',
@@ -172,9 +191,16 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
                       )}
                     >
                       {(() => {
-                        const lunar = Solar.fromDate(day).getLunar()
+                        const solar = Solar.fromDate(day)
+                        const lunar = solar.getLunar()
                         const festivals = lunar.getFestivals()
                         const solarTerms = lunar.getJieQi()
+                        const holiday = HolidayUtil.getHoliday(solar.getYear(), solar.getMonth(), solar.getDay())
+
+                        // Prioritize holiday name if it exists and is not a workday
+                        if (holiday && !holiday.isWork())
+                          return holiday.getName().length > 3 ? holiday.getName().substring(0, 3) : holiday.getName()
+
                         if (festivals.length > 0)
                           return festivals[0]
                         if (solarTerms)
