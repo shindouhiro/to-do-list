@@ -47,7 +47,10 @@
     "alreadyHaveAccount": "Already have an account?",
     "passwordMinLength": "Must be at least 6 characters",
     "loginFailed": "Login failed",
-    "registrationFailed": "Registration failed"
+    "registrationFailed": "Registration failed",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "••••••••",
+    "namePlaceholder": "John Doe"
   },
   "home": {
     "title": "Calendar Todo",
@@ -85,7 +88,9 @@
     "icon": "Icon",
     "color": "Color",
     "noCategoriesYet": "No categories yet. Create your first category!",
-    "deleteCategoryConfirm": "Are you sure you want to delete this category? Tasks with this category will not be deleted."
+    "deleteCategoryConfirm": "Are you sure you want to delete this category? Tasks with this category will not be deleted.",
+    "editCategoryAction": "Edit category",
+    "deleteCategoryAction": "Delete category"
   },
   "statistics": {
     "title": "Task Statistics",
@@ -106,7 +111,9 @@
     "tasksCompletedThisWeek": "Tasks completed this week",
     "tasksPerDayOnAverage": "Tasks per day on average",
     "noTasksYet": "No tasks yet",
-    "mostProductiveCategory": "Most Productive Category"
+    "mostProductiveCategory": "Most Productive Category",
+    "notAvailable": "N/A",
+    "completedSuffix": "({{count}} completed)"
   },
   "dataToolbar": {
     "total": "total",
@@ -131,5 +138,8 @@
   "categoryPicker": {
     "categoryOptional": "Category (Optional)",
     "category": "Category"
+  },
+  "languageSwitcher": {
+    "toggle": "Switch language"
   }
 }

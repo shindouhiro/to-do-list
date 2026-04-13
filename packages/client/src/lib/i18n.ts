@@ -8,11 +8,11 @@ import zh from '../locales/zh.json'
 
 const resources = {
   en: {
-    translation: en
+    translation: en,
   },
   zh: {
-    translation: zh
-  }
+    translation: zh,
+  },
 }
 
 i18n
@@ -20,17 +20,19 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
+    supportedLngs: ['en', 'zh'],
     fallbackLng: 'en',
-    debug: process.env.NODE_ENV === 'development',
-    
+    load: 'languageOnly',
+    debug: import.meta.env.DEV,
+
     interpolation: {
-      escapeValue: false // React already escapes by default
+      escapeValue: false,
     },
-    
+
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage']
-    }
+      caches: ['localStorage'],
+    },
   })
 
 export default i18n

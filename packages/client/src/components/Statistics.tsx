@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { endOfWeek, format, isSameDay, startOfDay, startOfWeek, subDays } from 'date-fns'
+import { enUS, zhCN } from 'date-fns/locale'
 import { Calendar as CalendarIcon, CheckCircle2, Circle, Target, TrendingUp } from 'lucide-react'
 import * as Icons from 'lucide-react'
 import { cn } from '../lib/utils'
@@ -12,7 +13,9 @@ interface StatisticsProps {
 }
 
 export function Statistics({ todos, categories }: StatisticsProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const dateLocale = (i18n.resolvedLanguage ?? 'en').startsWith('zh') ? zhCN : enUS
+  const isChinese = (i18n.resolvedLanguage ?? 'en').startsWith('zh')
   const stats = useMemo(() => {
     const total = todos.length
     const completed = todos.filter(t => t.completed).length
@@ -186,7 +189,7 @@ export function Statistics({ todos, categories }: StatisticsProps) {
               <div key={index} className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-white/80 font-medium">
-                    {format(day.date, 'EEE, MMM d')}
+                    {format(day.date, isChinese ? 'M月d日 EEE' : 'EEE, MMM d', { locale: dateLocale })}
                   </span>
                   <span className="text-white/60">
                     {day.completed}/{day.total}
@@ -238,7 +241,9 @@ export function Statistics({ todos, categories }: StatisticsProps) {
             <h4 className="text-lg font-semibold text-white">{t('statistics.bestDay')}</h4>
           </div>
           <div className="text-2xl font-bold text-white mb-2">
-            {stats.bestDay.total > 0 ? format(stats.bestDay.date, 'MMM d, yyyy') : 'N/A'}
+            {stats.bestDay.total > 0
+              ? format(stats.bestDay.date, isChinese ? 'yyyy年M月d日' : 'MMM d, yyyy', { locale: dateLocale })
+              : t('statistics.notAvailable')}
           </div>
           <p className="text-white/60 text-sm">
             {stats.bestDay.total > 0
@@ -326,7 +331,7 @@ export function Statistics({ todos, categories }: StatisticsProps) {
                       {stats.mostProductiveCategory.category.name}
                     </span>
                     <span className="text-white/60 text-sm">
-                      ({stats.mostProductiveCategory.completed} completed)
+                      {t('statistics.completedSuffix', { count: stats.mostProductiveCategory.completed })}
                     </span>
                   </div>
                 </div>

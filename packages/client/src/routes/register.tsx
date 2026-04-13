@@ -70,11 +70,12 @@ function RegisterPage() {
                 {t('auth.name')}
               </label>
               <input
+                id="register-name-input"
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-                placeholder="John Doe"
+                placeholder={t('auth.namePlaceholder')}
                 required
                 autoFocus
               />
@@ -85,11 +86,12 @@ function RegisterPage() {
                 {t('auth.email')}
               </label>
               <input
+                id="register-email-input"
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-                placeholder="you@example.com"
+                placeholder={t('auth.emailPlaceholder')}
                 required
               />
             </div>
@@ -99,11 +101,12 @@ function RegisterPage() {
                 {t('auth.password')}
               </label>
               <input
+                id="register-password-input"
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-                placeholder="••••••••"
+                placeholder={t('auth.passwordPlaceholder')}
                 required
                 minLength={6}
               />
@@ -113,6 +116,7 @@ function RegisterPage() {
             </div>
 
             <button
+              id="register-submit-button"
               type="submit"
               disabled={loading}
               className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-white font-medium transition-all shadow-lg hover:scale-105"

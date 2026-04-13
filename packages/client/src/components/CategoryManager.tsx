@@ -204,16 +204,18 @@ export function CategoryManager({ categories, onAddCategory, onUpdateCategory, o
                 </div>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
+                    id={`category-edit-${category.id}`}
                     onClick={() => handleEdit(category)}
                     className="p-2 text-white/60 hover:text-blue-400 transition-colors"
-                    title="Edit category"
+                    title={t('categories.editCategoryAction')}
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
+                    id={`category-delete-${category.id}`}
                     onClick={() => handleDelete(category.id)}
                     className="p-2 text-white/60 hover:text-red-400 transition-colors"
-                    title="Delete category"
+                    title={t('categories.deleteCategoryAction')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

@@ -47,7 +47,10 @@
     "alreadyHaveAccount": "已有账户？",
     "passwordMinLength": "密码至少需要6个字符",
     "loginFailed": "登录失败",
-    "registrationFailed": "注册失败"
+    "registrationFailed": "注册失败",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "••••••••",
+    "namePlaceholder": "张三"
   },
   "home": {
     "title": "日历待办",
@@ -85,7 +88,9 @@
     "icon": "图标",
     "color": "颜色",
     "noCategoriesYet": "还没有分类。创建您的第一个分类！",
-    "deleteCategoryConfirm": "您确定要删除此分类吗？具有此分类的任务不会被删除。"
+    "deleteCategoryConfirm": "您确定要删除此分类吗？具有此分类的任务不会被删除。",
+    "editCategoryAction": "编辑分类",
+    "deleteCategoryAction": "删除分类"
   },
   "statistics": {
     "title": "任务统计",
@@ -106,7 +111,9 @@
     "tasksCompletedThisWeek": "本周完成的任务",
     "tasksPerDayOnAverage": "平均每天任务数",
     "noTasksYet": "还没有任务",
-    "mostProductiveCategory": "最高效分类"
+    "mostProductiveCategory": "最高效分类",
+    "notAvailable": "暂无",
+    "completedSuffix": "（已完成 {{count}} 项）"
   },
   "dataToolbar": {
     "total": "总计",
@@ -131,5 +138,8 @@
   "categoryPicker": {
     "categoryOptional": "分类（可选）",
     "category": "分类"
+  },
+  "languageSwitcher": {
+    "toggle": "切换语言"
   }
 }

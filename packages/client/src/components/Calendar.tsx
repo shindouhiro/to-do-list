@@ -13,6 +13,7 @@ import {
   startOfWeek,
   subMonths,
 } from 'date-fns'
+import { enUS, zhCN } from 'date-fns/locale'
 import { Check, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { CategoryBadge, CategoryPicker, CategorySelector } from './CategoryComponents'
@@ -31,13 +32,15 @@ interface CalendarProps {
 
 
 export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteTodo }: CalendarProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [newTodoText, setNewTodoText] = useState('')
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string | undefined>(undefined)
   const [selectedCategoryForNewTodo, setSelectedCategoryForNewTodo] = useState<string | undefined>(undefined)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const dateLocale = (i18n.resolvedLanguage ?? 'en').startsWith('zh') ? zhCN : enUS
+  const isChinese = (i18n.resolvedLanguage ?? 'en').startsWith('zh')
 
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(monthStart)
@@ -106,7 +109,7 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
         <div className="flex-1 bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-3 md:p-6 shadow-xl">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold text-white tracking-tight">
-              {format(currentMonth, 'MMMM yyyy')}
+              {format(currentMonth, isChinese ? 'yyyy年M月' : 'MMMM yyyy', { locale: dateLocale })}
             </h2>
             <div className="flex gap-2">
               <button
@@ -194,7 +197,9 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
         )}>
           <div className="h-full flex flex-col">
             <h3 className="text-2xl font-bold text-white mb-6">
-              {selectedDate ? format(selectedDate, 'EEEE, MMMM do') : t('home.selectDate')}
+              {selectedDate
+                ? format(selectedDate, isChinese ? 'M月d日 EEEE' : 'EEEE, MMMM do', { locale: dateLocale })
+                : t('home.selectDate')}
             </h3>
 
             {selectedDate ? (
@@ -287,9 +292,10 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
       {/* Mobile Floating Action Button */}
       {selectedDate && (
         <button
+          id="calendar-mobile-add-task-button"
           onClick={() => setIsModalOpen(true)}
           className="fixed bottom-6 right-6 lg:hidden z-40 p-4 bg-indigo-500 hover:bg-indigo-600 text-white rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 flex items-center justify-center"
-          aria-label="Add Task"
+          aria-label={t('modal.addTask')}
         >
           <Plus className="w-6 h-6" />
         </button>
@@ -299,7 +305,9 @@ export function Calendar({ todos, categories, onAddTodo, onToggleTodo, onDeleteT
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={selectedDate ? t('calendar.addTaskForDate', { date: format(selectedDate, 'MMM d') }) : t('modal.addTask')}
+        title={selectedDate
+          ? t('calendar.addTaskForDate', { date: format(selectedDate, isChinese ? 'M月d日' : 'MMM d', { locale: dateLocale }) })
+          : t('modal.addTask')}
       >
         <form onSubmit={handleAddTodo} className="space-y-4">
           <div className="relative">
