@@ -3,9 +3,6 @@ version: '3.8'
 services:
   calendar-todo:
     image: shindouhiro/calendar-todo:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
       - "3003:3001"
     volumes:

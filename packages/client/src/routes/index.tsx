@@ -193,14 +193,16 @@ function App() {
               />
             )
           : (
-              <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-[2rem] p-8 shadow-xl">
-                <TaskTable
-                  todos={todos}
-                  categories={categories}
-                  onToggle={handleToggleTodo}
-                  onDelete={handleDeleteTodo}
-                  onDeleteMultiple={handleDeleteMultiple}
-                />
+              <div className="max-w-6xl mx-auto">
+                <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-4 md:p-6 shadow-xl">
+                  <TaskTable
+                    todos={todos}
+                    categories={categories}
+                    onToggle={handleToggleTodo}
+                    onDelete={handleDeleteTodo}
+                    onDeleteMultiple={handleDeleteMultiple}
+                  />
+                </div>
               </div>
             )}
       </div>
