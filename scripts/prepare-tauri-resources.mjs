@@ -40,7 +40,8 @@ const workspaceYaml = readFileSync(path.join(repoRoot, 'pnpm-workspace.yaml'), '
 
 // 一个简单的正则解析器，用于从 pnpm-workspace.yaml 提取 catalog
 const resolveVersion = (name) => {
-  const regex = new RegExp(`^\\s+${name}:\\s+["']?(.+?)["']?\\s*$`, 'm')
+  // 兼容有无引号的情况: "name": version 或 name: version
+  const regex = new RegExp(`^\\s+["']?${name}["']?:\\s+["']?(.+?)["']?\\s*$`, 'm')
   const match = workspaceYaml.match(regex)
   return match ? match[1] : null
 }
