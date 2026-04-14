@@ -19,22 +19,22 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "catalog:default",
-    "better-sqlite3": "catalog:default",
-    "cors": "catalog:default",
-    "express": "catalog:default",
-    "jsonwebtoken": "catalog:default"
+    "bcrypt": "catalog:",
+    "better-sqlite3": "catalog:",
+    "cors": "catalog:",
+    "express": "catalog:",
+    "jsonwebtoken": "catalog:"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "catalog:default",
-    "@types/bcrypt": "catalog:default",
-    "@types/better-sqlite3": "catalog:default",
-    "@types/cors": "catalog:default",
-    "@types/express": "catalog:default",
-    "@types/jsonwebtoken": "catalog:default",
-    "@types/node": "catalog:default",
-    "eslint": "catalog:default",
-    "tsx": "catalog:default",
-    "typescript": "catalog:default"
+    "@antfu/eslint-config": "catalog:",
+    "@types/bcrypt": "catalog:",
+    "@types/better-sqlite3": "catalog:",
+    "@types/cors": "catalog:",
+    "@types/express": "catalog:",
+    "@types/jsonwebtoken": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   }
 }
