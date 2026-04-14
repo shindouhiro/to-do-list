@@ -155,5 +155,11 @@
     "selectAll": "全选",
     "deleteSelected": "删除选中",
     "selectedCount": "已选中 {{count}} 项"
+  },
+  "dateFilter": {
+    "today": "当天",
+    "lastMonth": "最近一个月",
+    "lastYear": "最近一年",
+    "all": "全部"
   }
 }

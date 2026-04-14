@@ -16,20 +16,27 @@ interface ViewSwitcherProps<T extends string> {
 
 export function ViewSwitcher<T extends string>({ options, value, onChange }: ViewSwitcherProps<T>) {
   return (
-    <div className="flex bg-black/40 p-1 rounded-xl w-full xl:w-auto shadow-inner border border-white/5">
+    <div className="flex bg-black/40 backdrop-blur-xl p-1.5 rounded-2xl w-full xl:w-auto border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.2)]">
       {options.map(option => (
         <button
           key={option.value}
           onClick={() => onChange(option.value)}
           className={cn(
-            'flex-1 xl:flex-none px-6 py-2.5 rounded-lg transition-all duration-300 tracking-wide text-sm font-bold flex items-center justify-center gap-2',
+            'flex-1 xl:flex-none relative px-6 py-2 rounded-xl transition-all duration-300 tracking-wide text-sm font-bold flex items-center justify-center gap-2 overflow-hidden group',
             value === option.value
-              ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]'
-              : 'text-white/50 hover:text-white hover:bg-white/10',
+              ? 'text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]'
+              : 'text-white/60 hover:text-white',
           )}
         >
-          {option.icon}
-          {option.label}
+          {value === option.value ? (
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl" />
+          ) : (
+            <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-300 rounded-xl" />
+          )}
+          <div className="relative z-10 flex items-center gap-2">
+            {option.icon}
+            {option.label}
+          </div>
         </button>
       ))}
     </div>

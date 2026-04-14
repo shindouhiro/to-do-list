@@ -155,5 +155,11 @@
     "selectAll": "Select All",
     "deleteSelected": "Delete Selected",
     "selectedCount": "{{count}} selected"
+  },
+  "dateFilter": {
+    "today": "Today",
+    "lastMonth": "Last Month",
+    "lastYear": "Last Year",
+    "all": "All"
   }
 }

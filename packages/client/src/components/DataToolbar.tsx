@@ -10,7 +10,10 @@ interface DataToolbarProps {
   onRefresh?: () => void
 }
 
-export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
+export function DataToolbar({
+  todos,
+  onRefresh,
+}: DataToolbarProps) {
   const { t } = useTranslation()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -99,52 +102,53 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
   }
 
   return (
-    <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-4 shadow-xl">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        {/* 统计信息 */}
-        <div className="flex items-center gap-3 text-white/80">
-          <Info className="w-5 h-5 text-indigo-400" />
-          <div className="text-sm">
-            <span className="font-semibold text-white">{stats.total}</span>
-            {' '}
-            {t('dataToolbar.total')}
-            <span className="mx-2">•</span>
-            <span className="font-semibold text-green-400">{stats.completed}</span>
-            {' '}
-            {t('dataToolbar.done')}
-            <span className="mx-2">•</span>
-            <span className="font-semibold text-yellow-400">{stats.pending}</span>
-            {' '}
-            {t('dataToolbar.pending')}
+    <div className="w-full">
+      <div className="flex flex-wrap items-center justify-start xl:justify-end gap-4 lg:gap-6 w-full">
+        <div className="flex flex-wrap items-center justify-start xl:justify-end gap-4 flex-1 min-w-0">
+          {/* 统计信息 */}
+          <div className="flex items-center bg-black/40 backdrop-blur-xl p-1.5 rounded-2xl border border-white/10 shrink-0 shadow-[0_0_20px_rgba(0,0,0,0.2)] overflow-x-auto max-w-full hide-scrollbar">
+            <div className="flex items-center px-4 py-2 bg-white/5 rounded-xl border border-white/5 mr-2 shrink-0 transition-all duration-300 hover:bg-white/10">
+              <Info className="w-4 h-4 text-indigo-400 mr-2" />
+              <span className="text-white/60 text-xs font-semibold uppercase tracking-wider mr-2">{t('dataToolbar.total')}</span>
+              <span className="text-white font-bold bg-indigo-500/20 px-2 py-0.5 rounded-md text-sm shadow-inner">{stats.total}</span>
+            </div>
+            <div className="flex items-center px-4 py-2 bg-white/5 rounded-xl border border-white/5 mr-2 shrink-0 transition-all duration-300 hover:bg-white/10">
+              <span className="text-white/60 text-xs font-semibold uppercase tracking-wider mr-2">{t('dataToolbar.done')}</span>
+              <span className="text-green-400 font-bold bg-green-500/20 px-2 py-0.5 rounded-md text-sm shadow-inner">{stats.completed}</span>
+            </div>
+            <div className="flex items-center px-4 py-2 bg-white/5 rounded-xl border border-white/5 shrink-0 transition-all duration-300 hover:bg-white/10">
+              <span className="text-white/60 text-xs font-semibold uppercase tracking-wider mr-2">{t('dataToolbar.pending')}</span>
+              <span className="text-yellow-400 font-bold bg-yellow-500/20 px-2 py-0.5 rounded-md text-sm shadow-inner">{stats.pending}</span>
+            </div>
           </div>
         </div>
 
         {/* 操作按钮 */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 shrink-0 w-full md:w-auto grid grid-cols-3 md:flex">
           <button
             onClick={handleExport}
             disabled={todos.length === 0}
             className={cn(
-              'flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 rounded-xl transition-all',
-              'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30',
-              'disabled:opacity-50 disabled:cursor-not-allowed',
+              'group flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-300',
+              'bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/20 hover:border-indigo-500/50 hover:shadow-[0_0_15px_rgba(99,102,241,0.2)]',
+              'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:border-indigo-500/20 disabled:hover:bg-indigo-500/10'
             )}
             title={t('dataToolbar.exportAllTodos')}
           >
-            <Download className="w-4 h-4" />
-            <span className="text-sm font-medium">{t('dataToolbar.export')}</span>
+            <Download className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5" />
+            <span className="text-sm hidden sm:inline-block tracking-wide">{t('dataToolbar.export')}</span>
           </button>
 
           <button
             onClick={() => fileInputRef.current?.click()}
             className={cn(
-              'flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 rounded-xl transition-all',
-              'bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30',
+              'group flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-300',
+              'bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/20 hover:border-purple-500/50 hover:shadow-[0_0_15px_rgba(168,85,247,0.2)]'
             )}
             title={t('dataToolbar.importTodos')}
           >
-            <Upload className="w-4 h-4" />
-            <span className="text-sm font-medium">{t('dataToolbar.import')}</span>
+            <Upload className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5" />
+            <span className="text-sm hidden sm:inline-block tracking-wide">{t('dataToolbar.import')}</span>
           </button>
           <input
             ref={fileInputRef}
@@ -158,14 +162,14 @@ export function DataToolbar({ todos, onRefresh }: DataToolbarProps) {
             onClick={handleClearAll}
             disabled={todos.length === 0}
             className={cn(
-              'flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 rounded-xl transition-all',
-              'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30',
-              'disabled:opacity-50 disabled:cursor-not-allowed',
+              'group flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-300',
+              'bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/20 hover:border-red-500/50 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)]',
+              'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:border-red-500/20 disabled:hover:bg-red-500/10'
             )}
             title={t('dataToolbar.clearAllTodos')}
           >
-            <Trash2 className="w-4 h-4" />
-            <span className="text-sm font-medium">{t('dataToolbar.clear')}</span>
+            <Trash2 className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-red-400" />
+            <span className="text-sm hidden sm:inline-block tracking-wide">{t('dataToolbar.clear')}</span>
           </button>
         </div>
       </div>
