@@ -26,7 +26,7 @@ rmSync(CLIENT_RESOURCE_DIR, { recursive: true, force: true })
 rmSync(RUNTIME_RESOURCE_DIR, { recursive: true, force: true })
 
 run('pnpm --filter @todo-app/server build')
-run(`pnpm --filter @todo-app/server deploy --prod --legacy ${SERVER_RESOURCE_DIR}`)
+run(`pnpm --filter @todo-app/server deploy --prod ${SERVER_RESOURCE_DIR}`)
 rmSync(path.join(SERVER_RESOURCE_DIR, 'todo.db'), { force: true })
 rmSync(path.join(SERVER_RESOURCE_DIR, 'todo.db.backup'), { force: true })
 
