@@ -80,6 +80,7 @@ writeFileSync(
   path.join(SERVER_RESOURCE_DIR, '.npmrc'),
   [
     'recursive=false',
+    'node-linker=hoisted', // 强制打平 node_modules，解决 Windows 路径过长问题
     'only-built-dependencies[]=bcrypt',
     'only-built-dependencies[]=better-sqlite3',
   ].join('\n') + '\n',
