@@ -61,8 +61,16 @@ resolveDeps(serverPkg.devDependencies)
 cpSync(path.join(repoRoot, 'packages', 'server', 'dist'), path.join(SERVER_RESOURCE_DIR, 'dist'), { recursive: true })
 writeFileSync(path.join(SERVER_RESOURCE_DIR, 'package.json'), JSON.stringify(serverPkg, null, 2))
 
-// 在资源目录安装生产依赖
+// 在资源目录安装生产依赖 (通过空的 workspace 文件绕过根目录解析)
+console.log('Installing server dependencies in isolation...')
+writeFileSync(path.join(SERVER_RESOURCE_DIR, 'pnpm-workspace.yaml'), 'packages: []\n')
+writeFileSync(path.join(SERVER_RESOURCE_DIR, '.npmrc'), 'recursive=false\n')
+
 run('pnpm install --prod --no-frozen-lockfile', SERVER_RESOURCE_DIR)
+
+// 清理隔离文件
+rmSync(path.join(SERVER_RESOURCE_DIR, 'pnpm-workspace.yaml'))
+rmSync(path.join(SERVER_RESOURCE_DIR, '.npmrc'))
 
 // 2. 构建并准备 Client 资源
 console.log('Building client...')
