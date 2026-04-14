@@ -18,6 +18,8 @@ jobs:
       matrix:
         platform: [macos-latest, windows-latest]
 
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +27,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: setup pnpm
         uses: pnpm/action-setup@v3
@@ -48,9 +50,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__ # the action will replace __VERSION__ with the app version
-          releaseName: "Release v__VERSION__"
-          releaseBody: "See the assets to download this version and install."
-          releaseDraft: true
+          tagName: v__VERSION__
+          releaseName: "App Release v__VERSION__"
+          releaseBody: "Automated high-performance build."
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.platform == 'macos-latest' && '--target universal-apple-darwin' || '' }}
