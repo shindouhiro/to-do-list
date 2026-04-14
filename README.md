@@ -71,6 +71,23 @@ pnpm dev
 pnpm build
 ```
 
+### 桌面端打包 (Tauri)
+
+项目已支持将前端 + Node 后端一起打包到桌面应用（macOS / Windows）。
+
+```bash
+# 1) 准备打包资源（构建前端、部署后端依赖、复制 Node runtime）
+pnpm tauri:prepare
+
+# 2) 执行桌面打包（默认 targets=all）
+pnpm tauri:build
+```
+
+说明：
+- 打包时会将后端放入 `src-tauri/resources/server`，并由 Tauri 启动时自动拉起。
+- 生产数据库默认写入系统应用数据目录（`app_data_dir/todo.db`），不会污染项目目录。
+- 如仅需 macOS `.app`，可执行 `node scripts/run-tauri.mjs build --bundles app`。
+
 ## 🐳 Docker 生产部署 (推荐)
 
 本项目采用了极致的体积优化（~200MB），并支持一键通过 Docker Compose 部署。

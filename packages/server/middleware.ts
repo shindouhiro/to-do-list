@@ -33,6 +33,15 @@ export function notFoundHandler(req: Request, res: Response): void {
       error: 'Not found',
       path: req.path
     });
+    return;
+  }
+
+  // Non-GET methods for non-API routes should also return 404 instead of hanging
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.status(404).json({
+      error: 'Not found',
+      path: req.path
+    });
   }
 }
 

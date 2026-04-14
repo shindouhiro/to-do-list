@@ -26,9 +26,14 @@
     "lint": "pnpm -r lint",
     "format": "prettier --write .",
     "clean": "pnpm -r exec rm -rf node_modules dist .tanstack && rm -rf node_modules",
-    "install:all": "pnpm install"
+    "install:all": "pnpm install",
+    "tauri": "tauri",
+    "tauri:prepare": "node scripts/prepare-tauri-resources.mjs",
+    "tauri:dev": "node scripts/run-tauri.mjs dev",
+    "tauri:build": "pnpm tauri:prepare && node scripts/run-tauri.mjs build"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "catalog:",
     "@antfu/eslint-config": "catalog:",
     "@eslint-react/eslint-plugin": "catalog:",
     "eslint": "catalog:",
