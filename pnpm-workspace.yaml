@@ -7,14 +7,9 @@ packages:
 
 catalogs:
   default:
-  # Core
+    # Core
     react: ^19.2.0
     react-dom: ^19.2.0
-    typescript: ^6.0.2
-    tsx: ^4.21.0
-
-  dev:
-    # Mirror of default to satisfy buggy resolvers
     typescript: ^6.0.2
     tsx: ^4.21.0
 
