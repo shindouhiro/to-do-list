@@ -1,7 +1,7 @@
 {
   "name": "calendar-todo-app",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "Calendar Todo App - Monorepo",
   "author": "",
@@ -33,9 +33,9 @@
     "tauri:build": "pnpm tauri:prepare && node scripts/run-tauri.mjs build"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "catalog:",
     "@antfu/eslint-config": "catalog:",
     "@eslint-react/eslint-plugin": "catalog:",
+    "@tauri-apps/cli": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-format": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",
