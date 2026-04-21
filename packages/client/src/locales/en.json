@@ -29,6 +29,7 @@
     "login": "Login",
     "logout": "Logout",
     "register": "Register",
+    "settings": "Settings",
     "backToCalendar": "Back to Calendar"
   },
   "auth": {
@@ -171,5 +172,28 @@
     "lastMonth": "Last Month",
     "lastYear": "Last Year",
     "all": "All"
+  },
+  "settings": {
+    "title": "Settings",
+    "profile_info": "Profile Information",
+    "name": "Name",
+    "email": "Email Address",
+    "save_changes": "Save Changes",
+    "change_password": "Change Password",
+    "current_password": "Current Password",
+    "new_password": "New Password",
+    "confirm_new_password": "Confirm New Password",
+    "update_password": "Update Password",
+    "profile_updated": "Profile updated successfully!",
+    "password_updated": "Password updated successfully!",
+    "passwords_dont_match": "Passwords do not match",
+    "email_readonly": "Email cannot be changed.",
+    "name_placeholder": "Enter your name",
+    "current_password_placeholder": "Enter current password to make changes",
+    "new_password_placeholder": "Enter new password",
+    "confirm_new_password_placeholder": "Confirm new password",
+    "save_all": "Save All Changes",
+    "all_saved": "Settings updated successfully!",
+    "current_password_required": "Current password is required to change password"
   }
 }

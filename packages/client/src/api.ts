@@ -148,4 +148,25 @@ export const api = {
         await handleApiError(res, 'Failed to bulk add todos')
     },
   },
+  auth: {
+    updateProfile: async (updates: { name?: string, email?: string }): Promise<any> => {
+      const res = await fetch(`${API_URL}/auth/profile`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(updates),
+      })
+      if (!res.ok)
+        await handleApiError(res, 'Failed to update profile')
+      return res.json()
+    },
+    updatePassword: async (passwords: { currentPassword: string, newPassword: string }): Promise<void> => {
+      const res = await fetch(`${API_URL}/auth/password`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(passwords),
+      })
+      if (!res.ok)
+        await handleApiError(res, 'Failed to update password')
+    },
+  },
 }

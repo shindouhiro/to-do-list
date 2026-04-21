@@ -23,6 +23,7 @@ export interface AuthResponse {
 
 const API_URL = import.meta.env.VITE_API_URL || '/api'
 const TOKEN_KEY = 'auth_token'
+const USER_KEY = 'auth_user'
 const REQUEST_TIMEOUT_MS = 10000
 
 async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
@@ -65,6 +66,27 @@ export const tokenManager = {
   },
 }
 
+// User management
+export const userManager = {
+  getUser: (): User | null => {
+    const userJson = localStorage.getItem(USER_KEY)
+    if (!userJson) return null
+    try {
+      return JSON.parse(userJson)
+    } catch {
+      return null
+    }
+  },
+
+  setUser: (user: User): void => {
+    localStorage.setItem(USER_KEY, JSON.stringify(user))
+  },
+
+  removeUser: (): void => {
+    localStorage.removeItem(USER_KEY)
+  },
+}
+
 // Auth API
 export const authApi = {
   register: async (data: RegisterRequest): Promise<AuthResponse> => {
@@ -90,6 +112,7 @@ export const authApi = {
 
     const authData: AuthResponse = await res.json()
     tokenManager.setToken(authData.token)
+    userManager.setUser(authData.user)
     return authData
   },
 
@@ -116,11 +139,13 @@ export const authApi = {
 
     const authData: AuthResponse = await res.json()
     tokenManager.setToken(authData.token)
+    userManager.setUser(authData.user)
     return authData
   },
 
   logout: (): void => {
     tokenManager.removeToken()
+    userManager.removeUser()
   },
 
   getCurrentUser: async (): Promise<User> => {
@@ -134,7 +159,17 @@ export const authApi = {
       throw new Error('Failed to get current user')
     }
 
-    return res.json()
+    const user = await res.json()
+    userManager.setUser(user)
+    return user
+  },
+
+  getUser: (): User | null => {
+    return userManager.getUser()
+  },
+
+  setUser: (user: User): void => {
+    userManager.setUser(user)
   },
 
   isAuthenticated: (): boolean => {

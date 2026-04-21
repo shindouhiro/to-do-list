@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatisticsRouteImport } from './routes/statistics'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CategoriesRouteImport } from './routes/categories'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const StatisticsRoute = StatisticsRouteImport.update({
   id: '/statistics',
   path: '/statistics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/categories': typeof CategoriesRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/settings': typeof SettingsRoute
   '/statistics': typeof StatisticsRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/categories': typeof CategoriesRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/settings': typeof SettingsRoute
   '/statistics': typeof StatisticsRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,28 @@ export interface FileRoutesById {
   '/categories': typeof CategoriesRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/settings': typeof SettingsRoute
   '/statistics': typeof StatisticsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/categories' | '/login' | '/register' | '/statistics'
+  fullPaths:
+    | '/'
+    | '/categories'
+    | '/login'
+    | '/register'
+    | '/settings'
+    | '/statistics'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/categories' | '/login' | '/register' | '/statistics'
-  id: '__root__' | '/' | '/categories' | '/login' | '/register' | '/statistics'
+  to: '/' | '/categories' | '/login' | '/register' | '/settings' | '/statistics'
+  id:
+    | '__root__'
+    | '/'
+    | '/categories'
+    | '/login'
+    | '/register'
+    | '/settings'
+    | '/statistics'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +98,7 @@ export interface RootRouteChildren {
   CategoriesRoute: typeof CategoriesRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  SettingsRoute: typeof SettingsRoute
   StatisticsRoute: typeof StatisticsRoute
 }
 
@@ -86,6 +109,13 @@ declare module '@tanstack/react-router' {
       path: '/statistics'
       fullPath: '/statistics'
       preLoaderRoute: typeof StatisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -124,6 +154,7 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesRoute: CategoriesRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  SettingsRoute: SettingsRoute,
   StatisticsRoute: StatisticsRoute,
 }
 export const routeTree = rootRouteImport

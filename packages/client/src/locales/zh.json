@@ -25,10 +25,11 @@
     "home": "首页",
     "calendar": "日历",
     "statistics": "统计",
-    "categories": "分类",
+    "categories": "分类管理",
     "login": "登录",
     "logout": "退出",
     "register": "注册",
+    "settings": "个人设置",
     "backToCalendar": "返回日历"
   },
   "auth": {
@@ -171,5 +172,28 @@
     "lastMonth": "最近一个月",
     "lastYear": "最近一年",
     "all": "全部"
+  },
+  "settings": {
+    "title": "个人设置",
+    "profile_info": "基本信息",
+    "name": "昵称",
+    "email": "电子邮箱",
+    "save_changes": "保存修改",
+    "change_password": "修改密码",
+    "current_password": "当前密码",
+    "new_password": "新密码",
+    "confirm_new_password": "确认新密码",
+    "update_password": "更新密码",
+    "profile_updated": "个人资料已更新！",
+    "password_updated": "密码修改成功！",
+    "passwords_dont_match": "两次输入的密码不一致",
+    "email_readonly": "电子邮箱地址不可修改",
+    "name_placeholder": "请输入您的昵称",
+    "current_password_placeholder": "若需修改密码，请输入当前密码",
+    "new_password_placeholder": "请输入新密码",
+    "confirm_new_password_placeholder": "请再次输入新密码",
+    "save_all": "保存所有修改",
+    "all_saved": "个人设置已成功更新！",
+    "current_password_required": "修改密码前必须输入当前密码"
   }
 }

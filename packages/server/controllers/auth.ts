@@ -164,4 +164,95 @@ router.get('/me', authMiddleware, (req: AuthRequest, res: Response) => {
   }
 });
 
+// Update profile
+router.put('/profile', authMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user!.userId;
+    const { name, email } = req.body;
+
+    if (!name && !email) {
+      res.status(400).json({ error: 'Name or email is required' });
+      return;
+    }
+
+    // Check if email is already taken by another user
+    if (email) {
+      const existingUser = db.prepare('SELECT id FROM users WHERE email = ? AND id != ?').get(email, userId);
+      if (existingUser) {
+        res.status(409).json({ error: 'Email is already in use' });
+        return;
+      }
+    }
+
+    const updates: string[] = [];
+    const params: any[] = [];
+
+    if (name) {
+      updates.push('name = ?');
+      params.push(name);
+    }
+    if (email) {
+      updates.push('email = ?');
+      params.push(email);
+    }
+
+    params.push(userId);
+
+    db.prepare(`UPDATE users SET ${updates.join(', ')} WHERE id = ?`).run(...params);
+
+    const updatedUser = db.prepare('SELECT id, email, name, createdAt FROM users WHERE id = ?').get(userId) as UserResponse;
+
+    logger.info('User profile updated', { userId });
+    res.json(updatedUser);
+  } catch (error) {
+    logger.error('Update profile error', {
+      error: error instanceof Error ? error.message : String(error)
+    });
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// Update password
+router.put('/password', authMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user!.userId;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      res.status(400).json({ error: 'Current and new passwords are required' });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      res.status(400).json({ error: 'New password must be at least 6 characters' });
+      return;
+    }
+
+    // Verify current password
+    const user = db.prepare('SELECT password FROM users WHERE id = ?').get(userId) as { password: string } | undefined;
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const isValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isValid) {
+      res.status(401).json({ error: 'Current password is incorrect' });
+      return;
+    }
+
+    // Hash and update new password
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+    db.prepare('UPDATE users SET password = ? WHERE id = ?').run(hashedPassword, userId);
+
+    logger.info('User password updated', { userId });
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    logger.error('Update password error', {
+      error: error instanceof Error ? error.message : String(error)
+    });
+    res.status(500).json({ error: 'Failed to update password' });
+  }
+});
+
 export default router;
