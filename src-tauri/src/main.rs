@@ -141,7 +141,7 @@ fn main() {
         }
         Err(e) => {
           eprintln!("Backend spawn failed: {}", e);
-          let _ = tauri::api::dialog::message(
+          let _ = tauri::api::dialog::message::<tauri::Wry>(
             None,
             "启动失败",
             format!("后端服务启动失败: {}\n请检查磁盘空间或权限。", e)
@@ -152,7 +152,7 @@ fn main() {
 
       // 等待就绪
       if !wait_backend_ready(port, Duration::from_secs(15)) {
-        let _ = tauri::api::dialog::message(
+        let _ = tauri::api::dialog::message::<tauri::Wry>(
           None,
           "启动超时",
           "内置后端服务启动超时，请尝试重新启动应用。"
