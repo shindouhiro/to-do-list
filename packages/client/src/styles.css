@@ -1,5 +1,47 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-theme-start: var(--theme-start);
+  --color-theme-mid: var(--theme-mid);
+  --color-theme-end: var(--theme-end);
+}
+
+:root, [data-theme='default'] {
+  --theme-start: var(--color-slate-900);
+  --theme-mid: var(--color-purple-900);
+  --theme-end: var(--color-slate-900);
+}
+
+[data-theme='ocean'] {
+  --theme-start: var(--color-slate-950);
+  --theme-mid: var(--color-blue-900);
+  --theme-end: var(--color-slate-950);
+}
+
+[data-theme='forest'] {
+  --theme-start: var(--color-emerald-950);
+  --theme-mid: var(--color-emerald-900);
+  --theme-end: var(--color-emerald-950);
+}
+
+[data-theme='cyberpunk'] {
+  --theme-start: #2d0046;
+  --theme-mid: #000022;
+  --theme-end: #460022;
+}
+
+[data-theme='sunset'] {
+  --theme-start: #3f0a1d;
+  --theme-mid: #5b2111;
+  --theme-end: #3f0a1d;
+}
+
+[data-theme='dracula'] {
+  --theme-start: #282a36;
+  --theme-mid: #44475a;
+  --theme-end: #282a36;
+}
+
 body {
   @apply m-0;
   font-family:

@@ -51,7 +51,7 @@ function App() {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 px-3 py-6 sm:px-4 md:py-8 lg:py-12">
+    <div className="min-h-screen bg-gradient-to-br from-theme-start via-theme-mid to-theme-end px-3 py-6 sm:px-4 md:py-8 lg:py-12">
       <div className="mx-auto w-full max-w-7xl">
         <AppHeader />
 

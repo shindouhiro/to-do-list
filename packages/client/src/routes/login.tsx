@@ -37,7 +37,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 px-4 py-6 sm:py-8">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-theme-start via-theme-mid to-theme-end px-4 py-6 sm:py-8">
       <div className="w-full max-w-md">
         <div className="rounded-3xl border border-white/20 bg-white/10 p-5 shadow-2xl backdrop-blur-lg sm:p-8">
           <div className="mb-6 flex items-center justify-center sm:mb-8">

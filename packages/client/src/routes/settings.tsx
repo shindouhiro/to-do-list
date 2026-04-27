@@ -69,7 +69,7 @@ function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 px-4 py-6 md:py-10 lg:py-12">
+    <div className="min-h-screen bg-gradient-to-br from-theme-start via-theme-mid to-theme-end px-4 py-6 md:py-10 lg:py-12">
       <div className="mx-auto max-w-2xl">
         <div className="mb-8 flex items-center gap-3 md:mb-12 md:gap-4">
           <Link
