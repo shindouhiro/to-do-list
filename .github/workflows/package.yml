@@ -78,3 +78,59 @@ jobs:
             src-tauri/target/release/bundle/**/*.exe
             src-tauri/target/universal-apple-darwin/release/bundle/**/*.app
             src-tauri/target/universal-apple-darwin/release/bundle/**/*.dmg
+
+      - name: collect macOS release assets
+        if: startsWith(github.ref, 'refs/tags/v') && matrix.platform == 'macos-latest'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+
+          find src-tauri/target/universal-apple-darwin/release/bundle \
+            -type f -name '*.dmg' \
+            -exec cp '{}' release-assets/ \;
+
+          while IFS= read -r app; do
+            app_name="$(basename "$app" .app)"
+            ditto -c -k --sequesterRsrc --keepParent "$app" "release-assets/${app_name}-universal-macos.app.zip"
+          done < <(find src-tauri/target/universal-apple-darwin/release/bundle -type d -name '*.app')
+
+          ls -la release-assets
+
+      - name: collect Windows release assets
+        if: startsWith(github.ref, 'refs/tags/v') && matrix.platform == 'windows-latest'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path release-assets | Out-Null
+          Get-ChildItem -Path src-tauri/target/release/bundle -Recurse -File -Include *.msi,*.exe |
+            Copy-Item -Destination release-assets -Force
+          Get-ChildItem release-assets
+
+      - name: upload bundles to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          assets=(release-assets/*)
+
+          if [ ${#assets[@]} -eq 0 ]; then
+            echo "No release assets were collected."
+            exit 1
+          fi
+
+          for attempt in {1..30}; do
+            if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+              break
+            fi
+            sleep 10
+          done
+
+          if ! gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release create "$TAG_NAME" --title "$TAG_NAME" --generate-notes
+          fi
+
+          gh release upload "$TAG_NAME" "${assets[@]}" --clobber
