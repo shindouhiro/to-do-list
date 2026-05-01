@@ -15,7 +15,7 @@ FROM rust:1.85-bookworm AS backend
 WORKDIR /app
 
 COPY src-tauri src-tauri
-RUN cargo build --release --no-default-features --features server-bin --manifest-path src-tauri/Cargo.toml --bin gtd-server
+RUN cargo build --release --no-default-features --manifest-path src-tauri/Cargo.toml --example gtd-server
 
 FROM debian:bookworm-slim AS runner
 WORKDIR /app
@@ -31,7 +31,7 @@ ENV PORT=3001
 ENV DB_PATH=/app/data/todo.db
 ENV CLIENT_DIST_PATH=/app/client/dist
 
-COPY --from=backend /app/src-tauri/target/release/gtd-server /app/gtd-server
+COPY --from=backend /app/src-tauri/target/release/examples/gtd-server /app/gtd-server
 COPY --from=frontend /app/packages/client/dist /app/client/dist
 
 EXPOSE 3001
